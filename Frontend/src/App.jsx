@@ -1,7 +1,15 @@
-import "./App.css";
+// Required Imports.
+import "./css/styles.css";
+import Header from "./Components/Header/Header";
+import Footer from "./Components/Footer/Footer";
 
 function App() {
-  return <h1>Hello world</h1>;
+  return (
+    <>
+      <Header />
+      <Footer />
+    </>
+  );
 }
 
 export default App;
