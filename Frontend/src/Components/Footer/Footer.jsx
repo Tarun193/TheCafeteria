@@ -6,7 +6,7 @@ const Footer = () => {
       <hr className="h-1 bg-yellow-950 w-2/3 mx-auto rounded-full mt-2" />
       <footer className="flex flex-col items-center sticky bottom-0 mt-2 py-2">
         <a>
-          <p className="text-lg">
+          <p className="text-lg font-bold">
             &copy; The<span className="text-yellow-950">Cafeteria</span> ☕
           </p>
         </a>

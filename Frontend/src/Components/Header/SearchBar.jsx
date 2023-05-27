@@ -10,7 +10,7 @@ const SearchBar = () => {
         id="search"
         className="border-black border-2 px-2 py-[0.15rem] w-full rounded-full"
       />
-      <button className="absolute top-[0.1rem] right-[0.1rem] bg-white pr-3 rounded-full py-1">
+      <button className="absolute top-[0.13rem] right-[0.1rem] bg-white pl-2 pr-3 rounded-full py-1">
         <BsFillSearchHeartFill size={20} />
       </button>
     </form>
