@@ -31,7 +31,7 @@ const TopProducts = () => {
       title: "Chamomile tea - Natural",
       type: "decaffeinated",
       Description:
-        "Tim Hortons specialty teas offer the discerning tea drinker the chance to experience a variety of high quality specialty teas. Discover and enjoy our wide selection of extraordinary teas. Our soothing, revitalizing and delicious herbal teas are made from various selections of the finest herbs, flowers and spices. Tim Hortons chamomile herbal tea is an aromatic, calming herbal tea – naturally caffeine free.",
+        " Tim Hortons specialty teas offer the discerning tea drinker the chance to experience a variety of high quality specialty teas. Discover and enjoy our wide selection of extraordinary teas. Our soothing, revitalizing and delicious herbal teas are made from various selections of the finest herbs, flowers and spices. Tim Hortons chamomile herbal tea is an aromatic, calming herbal tea – naturally caffeine free.",
       Stock: 3,
       like: 0,
       Rating: 4,
