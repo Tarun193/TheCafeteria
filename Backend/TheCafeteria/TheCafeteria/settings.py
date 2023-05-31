@@ -127,11 +127,20 @@ STATIC_URL = "static/"
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
-# Adding My own Setting
+# ------------------------------------------------------------ Adding My own Setting ------------------------------------------------
+
 # Allowing all the dfferent origins to make request to API, Just for development but letter going to change it.
 CORS_ALLOW_ALL_ORIGINS = True
 
+# For Hosting static Files:
+STATIC_URL = "/static/"
+
+STATICFILES_DIRS = [
+    os.path.join(BASE_DIR, "static/"),
+]
 
 # User Uploaded Images:
-MEDIA_ROOT = os.path.join(BASE_DIR, "media")
+MEDIA_ROOT = os.path.join(BASE_DIR, "static/media")
 MEDIA_URL = "/media/"
+
+print(BASE_DIR)

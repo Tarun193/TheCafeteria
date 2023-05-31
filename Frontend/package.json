@@ -11,14 +11,17 @@
     "tailwind": "npx tailwindcss -i ./src/input.css -o ./src/css/styles.css --watch"
   },
   "dependencies": {
+    "@reduxjs/toolkit": "^1.9.5",
     "react": "^18.2.0",
-    "react-dom": "^18.2.0"
+    "react-dom": "^18.2.0",
+    "react-redux": "^8.0.7"
   },
   "devDependencies": {
     "@headlessui/react": "^1.7.14",
     "@types/react": "^18.0.28",
     "@types/react-dom": "^18.0.11",
     "@vitejs/plugin-react": "^4.0.0",
+    "axios": "^1.4.0",
     "eslint": "^8.38.0",
     "eslint-plugin-react": "^7.32.2",
     "eslint-plugin-react-hooks": "^4.6.0",
