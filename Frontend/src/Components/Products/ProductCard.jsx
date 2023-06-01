@@ -2,12 +2,16 @@
 import { BsArrowRight } from "react-icons/bs";
 import ProductCardImage from "./ProductCardImage";
 import ProductCardContent from "./ProductCardContent";
-
+import { useNavigate } from "react-router-dom";
 
 const ProductCard = ({ product }) => {
+  const navigate = useNavigate();
   const img = product.images[0].image;
   return (
-    <article className="group relative md:hover:scale-105 w-[60%] sm:w-[43%] md:w-[35%] lg:w-[29%] shadow-md hover:shadow-lg hover:shadow-stone-600/70 hover:cursor-pointer flex justify-center py-6 rounded-xl shadow-stone-600/60 mb-2  sm:mx-4 lg:mx-6">
+    <article
+      onClick={() => navigate(`product/${product?.id}`)}
+      className="group relative md:hover:scale-105 w-[60%] sm:w-[43%] md:w-[35%] lg:w-[29%] shadow-md hover:shadow-lg hover:shadow-stone-600/70 hover:cursor-pointer flex justify-center py-6 rounded-xl shadow-stone-600/60 mb-2  sm:mx-4 lg:mx-6 bg-white"
+    >
       <div className="w-[80%]">
         <ProductCardImage img={`http://127.0.0.1:8000/static${img}`} />
         <ProductCardContent product={product} />

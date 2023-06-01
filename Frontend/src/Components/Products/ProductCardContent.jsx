@@ -3,11 +3,11 @@ import { BsCurrencyDollar } from "react-icons/bs";
 
 const ProductCardContent = ({ product }) => {
   return (
-    <div className="space-y-1 mt-1 font-mono relative text-sm sm:text-lg md:text-xl tracking-tight text-slate-900">
+    <div className="space-y-2 mt-1 font-roboto relative text-sm sm:text-lg md:text-xl tracking-tight text-slate-900">
       <p className="text-left">
-        {product.title.length <= 24
+        {product.title.length <= 33
           ? product.title
-          : `${product.title.slice(0, 23)}...`}
+          : `${product.title.slice(0, 33)}...`}
       </p>
       <div>
         <BsCurrencyDollar size={20} className="inline relative top-[-0.1rem]" />

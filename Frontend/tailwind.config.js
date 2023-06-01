@@ -3,7 +3,11 @@ const plugins = require("tailwindcss/plugin");
 export default {
   content: ["./src/**/*.{html,jsx,js}"],
   theme: {
-    extend: {},
+    extend: {
+      fontFamily: {
+        roboto: "'Roboto Condensed', sans-serif;",
+      },
+    },
   },
   plugins: [
     plugins(function ({ addUtilities }) {

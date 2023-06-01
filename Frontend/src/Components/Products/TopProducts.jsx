@@ -7,6 +7,7 @@ import {
 import { useRef } from "react";
 import { useSelector } from "react-redux";
 import { selectAllProducts } from "../../Features/Products/ProductSlice";
+import { Link } from "react-router-dom";
 
 const TopProducts = () => {
   // To handle the reference of the section which we have to scroll
