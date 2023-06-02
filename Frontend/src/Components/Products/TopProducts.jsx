@@ -40,7 +40,7 @@ const TopProducts = () => {
         <BsFillArrowLeftSquareFill size={20} className="" />
       </button>
       <section
-        className="flex flex-nowrap gap-4 overflow-y-auto px-1 py-3 no-scrollbar"
+        className="flex flex-nowrap gap-2 overflow-y-auto px-1 py-3 no-scrollbar"
         ref={productSection}
       >
         {products.map((product) => (
