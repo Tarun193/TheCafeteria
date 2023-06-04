@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
-import { isLoggedIn } from "../../Features/auth/authSlice";
+import { isLoggedIn, userSignUp } from "../../Features/auth/authSlice";
 import API from "../../utils/API/api";
 
 const SignUpPage = () => {
@@ -11,6 +11,7 @@ const SignUpPage = () => {
   const [password1, setPassword1] = useState("");
   const [password2, setPassword2] = useState("");
   const [requestStatus, setRequestStatus] = useState("idle");
+  const [error, setError] = useState("");
   const dispatch = useDispatch();
   const LoggedIn = useSelector(isLoggedIn);
   const navigate = useNavigate();
@@ -25,32 +26,30 @@ const SignUpPage = () => {
     }
   }, [LoggedIn]);
 
-  const handleLoginSubmition = (e) => {
+  const handleLoginSubmition = async (e) => {
+    setRequestStatus("pending");
     e.preventDefault();
-    console.log(
-      JSON.stringify({
-        firstName,
-        lastName,
-        password1,
-        password2,
-        email,
-      })
-    );
-    API.post(
-      "SignUp/",
-      JSON.stringify({
-        firstName,
-        lastName,
-        password1,
-        password2,
-        email,
-      })
-    );
-    setFirstName("");
-    setLastName("");
-    setEmail("");
-    setPassword1("");
-    setPassword2("");
+    try {
+      const data = JSON.stringify({
+        first_name: firstName,
+        last_name: lastName,
+        password: password1,
+        email: email,
+        username: firstName + lastName,
+      });
+      await dispatch(userSignUp(data)).unwrap();
+      setFirstName("");
+      setLastName("");
+      setEmail("");
+      setPassword1("");
+      setPassword2("");
+      setError(null);
+      navigate("Login/");
+    } catch (e) {
+      setError(e.message);
+    } finally {
+      setRequestStatus("idle");
+    }
   };
 
   return (
@@ -130,6 +129,7 @@ const SignUpPage = () => {
               )
             ) : null}
           </p>
+          <p className="text-red-400 text-md">{error}</p>
           <p className="text-sm">
             Already Have an account?{" "}
             <Link to={"/Login/"} className="underline">

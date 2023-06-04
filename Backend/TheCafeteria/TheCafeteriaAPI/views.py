@@ -1,6 +1,4 @@
 # Important Imports
-from django.http import HttpResponse
-
 from .Serializer import ProductSerializer, CustomUserSerilizer
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
@@ -17,9 +15,16 @@ def GetProducts(request):
 
 @api_view(["POST"])
 def SignUp(request):
-    data = request.data
-    user = CustomUser.objects.create(
-        first_name=data["firstName"], last_name=data["lastName"], email=data["email"]
-    )
-    user.set_password(data["password1"])
-    return HttpResponse("Chill")
+    if CustomUser.objects.filter(email__iexact=request.data["email"]).exists():
+        return Response({"message": "Email alredy exists"}, status=400)
+    try:
+        user = CustomUserSerilizer(data=request.data)
+        if user.is_valid():
+            print(user)
+            user.save()
+            return Response({"message": "success"}, status=200)
+        else:
+            return Response({"message": "In valid form."}, status=400)
+    except:
+        print(Exception)
+        return Response({"message": "unknown error ouccured"}, status=500)

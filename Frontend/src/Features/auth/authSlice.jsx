@@ -61,6 +61,19 @@ export const refreshToken = createAsyncThunk(
     }
   }
 );
+
+export const userSignUp = createAsyncThunk(
+  "userSignUp",
+  async (SignUpInfo, ThunkAPI) => {
+    try {
+      const response = await API.post("SignUp/", SignUpInfo);
+      console.log(response.data);
+    } catch (e) {
+      return ThunkAPI.rejectWithValue(e.response.data);
+    }
+  }
+);
+
 export const authSlice = createSlice({
   name: "auth",
   initialState,
