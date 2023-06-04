@@ -8,8 +8,12 @@ import { Routes, Route } from "react-router-dom";
 import ProductPage from "./Pages/Products/ProductPage";
 import LoginPage from "./Pages/Login/Login";
 import Layout from "./Components/Layout";
+import { getuserInfo } from "./Features/auth/authSlice";
+import { useSelector } from "react-redux";
 
 function App() {
+  const user = useSelector(getuserInfo);
+  // console.log(user);
   return (
     <Router>
       <Routes>
