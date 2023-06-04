@@ -1,5 +1,6 @@
 from rest_framework import serializers
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
+from .models import Product, ProductImages, CustomUser
 
 
 class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
@@ -13,9 +14,6 @@ class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
         # ...
 
         return token
-
-
-from .models import Product, ProductImages
 
 
 class ProductImagesSerializer(serializers.ModelSerializer):
@@ -41,3 +39,9 @@ class ProductSerializer(serializers.ModelSerializer):
             "likes",
             "images",
         ]
+
+
+class CustomUserSerilizer(serializers.ModelSerializer):
+    class Meta:
+        model = CustomUser
+        fields = "__all__"

@@ -30,6 +30,7 @@ const LoginPage = () => {
           onSubmit={(e) => handleLoginSubmition(e)}
           className="p-6 sm:p-12 text-lg sm:text-2xl bg-white rounded-md space-y-4 shadow-lg"
         >
+          <legend className="text-center font-bold">Login</legend>
           <p className="space-y-2">
             <label htmlFor="email" className="block">
               Email:
@@ -55,7 +56,10 @@ const LoginPage = () => {
             />
           </p>
           <p className="text-sm">
-            Don't Have an account? <Link className="underline">SignUp</Link>{" "}
+            Don't Have an account?{" "}
+            <Link to={"/Signup/"} className="underline">
+              SignUp
+            </Link>{" "}
           </p>
           <button
             type="submit"
