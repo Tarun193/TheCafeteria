@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     "TheCafeteriaAPI",
     "rest_framework",
     "rest_framework_simplejwt",
+    "django_cleanup.apps.CleanupConfig",
 ]
 
 MIDDLEWARE = [

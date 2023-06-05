@@ -3,14 +3,26 @@ from .Serializer import ProductSerializer, CustomUserSerilizer
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 
-from .models import Product, CustomUser
+from .models import Product, CustomUser, ProductImages
 
 
 @api_view(["GET", "POST"])
 def GetProducts(request):
-    AllProducts = Product.objects.all()
-    SerializedProducts = ProductSerializer(AllProducts, many=True)
-    return Response(SerializedProducts.data)
+    if request.method == "GET":
+        AllProducts = Product.objects.all()
+        SerializedProducts = ProductSerializer(AllProducts, many=True)
+        return Response(SerializedProducts.data)
+
+    elif request.method == "POST":
+        images = request.data.pop("images")
+        product = ProductSerializer(data=request.data)
+        if product.is_valid():
+            productsaved = product.save()
+        for image in images:
+            img = ProductImages.objects.create(product=productsaved, image=image)
+            img.save()
+
+    return Response("item")
 
 
 @api_view(["POST"])
