@@ -9,10 +9,13 @@ import Layout from "./Components/Layout";
 import SignUpPage from "./Pages/SignUp/SignUpPage";
 import { getuserInfo } from "./Features/auth/authSlice";
 import { useSelector } from "react-redux";
+import AddProduct from "./Pages/AddProduct/AddProduct";
+import { selectAllProducts } from "./Features/Products/ProductSlice";
+import PrivateRoutes from "./utils/PrivateRoute/PrivateRoute";
 
 function App() {
   const user = useSelector(getuserInfo);
-  // console.log(user);
+  console.log(user);
   return (
     <Router>
       <Routes>
@@ -23,6 +26,9 @@ function App() {
           </Route>
           <Route path="Login" element={<LoginPage />} />
           <Route path="Signup" element={<SignUpPage />} />
+          <Route path="admin" element={<PrivateRoutes />}>
+            <Route path="addProduct" element={<AddProduct />} />
+          </Route>
         </Route>
       </Routes>
     </Router>

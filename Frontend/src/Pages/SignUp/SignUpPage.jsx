@@ -44,7 +44,7 @@ const SignUpPage = () => {
       setPassword1("");
       setPassword2("");
       setError(null);
-      navigate("Login/");
+      navigate("/Login/");
     } catch (e) {
       setError(e.message);
     } finally {

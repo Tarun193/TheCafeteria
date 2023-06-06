@@ -1,6 +1,7 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 
 import API from "../../utils/API/api";
+import axios from "axios";
 
 // Initial state of out Products.
 const initialState = {
@@ -18,6 +19,22 @@ export const fetchProducts = createAsyncThunk(
     } catch (e) {
       console.log("Error is: ", e);
       throw e; // Add this line to rethrow the error
+    }
+  }
+);
+
+export const addProducts = createAsyncThunk(
+  "products/addProducts",
+  async (data, thunkAPI) => {
+    try {
+      const response = await API.post("products/", data, {
+        headers: {
+          "content-type": "multipart/form-data",
+        },
+      });
+      thunkAPI.dispatch(fetchProducts());
+    } catch (e) {
+      thunkAPI.rejectWithValue(e.response.data);
     }
   }
 );

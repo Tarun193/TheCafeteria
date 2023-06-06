@@ -16,13 +16,18 @@ def GetProducts(request):
     elif request.method == "POST":
         images = request.data.pop("images")
         product = ProductSerializer(data=request.data)
-        if product.is_valid():
-            productsaved = product.save()
-        for image in images:
-            img = ProductImages.objects.create(product=productsaved, image=image)
-            img.save()
-
-    return Response("item")
+        try:
+            if product.is_valid():
+                product = product.save()
+                print("texts")
+                for image in images:
+                    img = ProductImages.objects.create(product=product, image=image)
+                    img.save()
+                return Response({"message": "Success"}, status=200)
+            else:
+                return Response({"message": "Invalid Form"}, status=400)
+        except:
+            return Response({"message": "server error"}, status=500)
 
 
 @api_view(["POST"])

@@ -6,7 +6,7 @@ import { useNavigate } from "react-router-dom";
 
 const ProductCard = ({ product }) => {
   const navigate = useNavigate();
-  const img = product.images[0].image;
+  const img = product.images.length ? product.images[0].image : null;
   return (
     <article
       onClick={() => navigate(`product/${product?.id}`)}

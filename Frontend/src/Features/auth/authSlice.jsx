@@ -94,9 +94,11 @@ export const authSlice = createSlice({
       if (action.payload) {
         state.tokenPair = action.payload;
         state.loggedIn = true;
-        const name = jwt(action.payload.access).name;
-        const user_id = jwt(action.payload.access).user_id;
-        state.userDetails = { name, user_id };
+        const data = jwt(action.payload.access);
+        const name = data.name;
+        const user_id = data.user_id;
+        const admin = data.admin;
+        state.userDetails = { name, user_id, admin };
       }
     })
       .addCase(userLogin.rejected(), (state, action) => {
