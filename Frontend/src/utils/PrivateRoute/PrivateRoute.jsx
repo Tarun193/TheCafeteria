@@ -5,9 +5,8 @@ import { useSelector } from "react-redux";
 
 const PrivateRoutes = () => {
   const { pathname } = useLocation();
-  const [isValidToken, setIsValidToken] = useState();
+  const [isValidToken, setIsValidToken] = useState(true);
   const userData = useSelector(getuserInfo);
-  console.log(userData);
 
   useEffect(() => {
     // on initial mount or route change, check token
@@ -16,7 +15,7 @@ const PrivateRoutes = () => {
     } else {
       setIsValidToken(false);
     }
-  }, [pathname]);
+  }, [pathname, userData]);
 
   return isValidToken ? <Outlet /> : <Navigate to="/Login" replace />;
 };

@@ -16,7 +16,7 @@ export const userLogin = createAsyncThunk(
     try {
       const response = await API.post("token/", JSON.stringify(userInfo));
       // refreshing tokens with given Interval;
-      const refreshInterval = 10 * 1000;
+      const refreshInterval = 60 * 1000;
       const refreshID = setTimeout(
         () => dispatch(refreshToken()),
         refreshInterval
@@ -49,7 +49,7 @@ export const refreshToken = createAsyncThunk(
       }
 
       // refreshing tokens with given Interval;
-      const refreshInterval = 10 * 1000;
+      const refreshInterval = 60 * 1000;
       const refreshID = setTimeout(
         () => dispatch(refreshToken()),
         refreshInterval

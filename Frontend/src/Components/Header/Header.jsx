@@ -3,6 +3,7 @@ import SearchBar from "./SearchBar";
 import { Link } from "react-router-dom";
 import { isLoggedIn, logout } from "../../Features/auth/authSlice";
 import { useDispatch, useSelector } from "react-redux";
+import DropDownMenu from "./DropDownMenu";
 
 const Header = () => {
   const loggedIN = useSelector(isLoggedIn);
@@ -21,19 +22,14 @@ const Header = () => {
         <nav className="w-full md:w-1/3 md:my-0 mt-4">
           <ul className="text-[0.9rem] md:text-[1rem] lg:text-xl font-semibold flex w-full sm:w-[80%] mx-auto justify-between md:justify-evenly md:w-full">
             <li>Products</li>
-            {loggedIN ? (
-              <button
-                onClick={() => dispatch(logout())}
-                className="hover:cursor-pointer"
-              >
-                <li>Logout</li>
-              </button>
-            ) : (
-              <Link to={"Login/"}>
-                <li>Login/SignIn</li>
-              </Link>
-            )}
             <li>Cart 🛒</li>
+            <li>
+              {loggedIN ? (
+                <DropDownMenu />
+              ) : (
+                <Link to={"Login/"}>Login/SignIn</Link>
+              )}
+            </li>
           </ul>
         </nav>
       </section>
