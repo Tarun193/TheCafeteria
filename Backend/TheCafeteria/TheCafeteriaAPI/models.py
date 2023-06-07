@@ -11,6 +11,14 @@ class CustomUser(AbstractUser):
     REQUIRED_FIELDS = ["username", "first_name", "last_name"]
 
 
+class Brand(models.Model):
+    name = models.CharField(max_length=100, blank=False, null=False)
+    logo = models.ImageField(upload_to="BrandImages/")
+
+    def __str__(self) -> str:
+        return self.name
+
+
 # Create your models here.
 class Product(models.Model):
     title = models.CharField(max_length=100, blank=False, null=False)
@@ -22,7 +30,7 @@ class Product(models.Model):
     # Future attributes.
     # type
     # Reviews Rating
-    # Brand
+    Brand = models.ForeignKey(Brand, on_delete=models.CASCADE, blank=True, default=None)
 
     def __str__(self):
         return self.title

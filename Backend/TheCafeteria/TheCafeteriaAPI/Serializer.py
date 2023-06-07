@@ -1,6 +1,6 @@
 from rest_framework import serializers
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
-from .models import Product, ProductImages, CustomUser
+from .models import Product, ProductImages, CustomUser, Brand
 
 
 class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
@@ -21,17 +21,24 @@ class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
 class ProductImagesSerializer(serializers.ModelSerializer):
     class Meta:
         model = ProductImages
-        fields = ["image"]
+        fields = ["id", "image"]
+
+
+class BrandSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Brand
+        fields = "__all__"
 
 
 class ProductSerializer(serializers.ModelSerializer):
-    # Setting related field to seiralize all the images related to a Product.
-    images = ProductImagesSerializer(many=True, read_only=True)
+    images = serializers.ListField(
+        child=serializers.ImageField(), write_only=True, required=False
+    )
+    Brand = serializers.PrimaryKeyRelatedField(queryset=Brand.objects.all())
 
-    # model to to serilize to serialize and which fields should be serialized
     class Meta:
         model = Product
-        fields = [
+        fields = (
             "id",
             "title",
             "subTitle",
@@ -40,7 +47,34 @@ class ProductSerializer(serializers.ModelSerializer):
             "stock",
             "likes",
             "images",
-        ]
+            "Brand",
+        )
+
+    def create(self, validated_data):
+        images_data = validated_data.pop("images")
+        product = Product.objects.create(**validated_data)
+        for image_data in images_data:
+            ProductImages.objects.create(product=product, image=image_data)
+        return product
+
+    def update(self, instance, validated_data):
+        images_data = validated_data.pop("images", [])
+        instance.title = validated_data.get("title", instance.title)
+        instance.subTitle = validated_data.get("subTitle", instance.subTitle)
+        instance.price = validated_data.get("price", instance.price)
+        instance.stock = validated_data.get("stock", instance.stock)
+        instance.Brand = validated_data.get("Brand", instance.Brand)
+        instance.description = validated_data.get("description", instance.description)
+
+        for image_data in images_data:
+            ProductImages.objects.create(product=instance, image=image_data)
+        instance.save()
+        return instance
+
+    def to_representation(self, instance):
+        self.fields["images"] = ProductImagesSerializer(many=True)
+        self.fields["Brand"] = BrandSerializer()
+        return super(ProductSerializer, self).to_representation(instance)
 
 
 class CustomUserSerilizer(serializers.ModelSerializer):
