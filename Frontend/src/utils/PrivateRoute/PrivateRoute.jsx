@@ -5,7 +5,7 @@ import { useSelector } from "react-redux";
 
 const PrivateRoutes = () => {
   const { pathname } = useLocation();
-  const [isValidToken, setIsValidToken] = useState(true);
+  const [isValidToken, setIsValidToken] = useState();
   const userData = useSelector(getuserInfo);
 
   useEffect(() => {
@@ -16,6 +16,10 @@ const PrivateRoutes = () => {
       setIsValidToken(false);
     }
   }, [pathname, userData]);
+
+  if (isValidToken === undefined) {
+    return <h1></h1>; // or loading indicator/spinner/etc
+  }
 
   return isValidToken ? <Outlet /> : <Navigate to="/Login" replace />;
 };

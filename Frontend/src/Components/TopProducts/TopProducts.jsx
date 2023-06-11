@@ -44,7 +44,13 @@ const TopProducts = () => {
         ref={productSection}
       >
         {products.map((product) => (
-          <ProductCard key={product.id} product={product} />
+          <ProductCard
+            key={product.id}
+            product={product}
+            className={
+              "sm:max-w-[43%] md:max-w-[35%] lg:max-w-[29%] max-w-[70%] min-w-[70%]  sm:min-w-[43%] md:min-w-[35%] lg:min-w-[29%] mb-2 mx-4"
+            }
+          />
         ))}
       </section>
       <button

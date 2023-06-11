@@ -57,6 +57,7 @@ const SignUpPage = () => {
       <section className="min-h-[80vh] flex justify-center items-center">
         <form
           onSubmit={(e) => handleLoginSubmition(e)}
+          autoComplete="off"
           className="p-6 sm:p-12 text-lg sm:text-2xl bg-white rounded-md space-y-4 shadow-lg max-h-[450px] overflow-scroll no-scrollbar"
         >
           <legend className="text-center font-bold">Sign Up</legend>

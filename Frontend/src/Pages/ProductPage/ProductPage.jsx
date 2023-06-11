@@ -1,18 +1,29 @@
-import { useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import { selectAllProducts } from "../../Features/Products/ProductSlice";
 import { useSelector } from "react-redux";
 import { BASE_URL } from "../../utils/API/api";
 import { useState } from "react";
 import { AiTwotoneLike } from "react-icons/ai";
+import { FiEdit2 } from "react-icons/fi";
+import { getuserInfo } from "../../Features/auth/authSlice";
+
 const ProductPage = () => {
   const { id } = useParams();
   const products = useSelector(selectAllProducts);
   const product = products.find((item) => item.id == id);
   const [quatity, setQuntity] = useState(1);
-  console.log(product);
+  const user = useSelector(getuserInfo);
   return (
     <section className="w-full my-10 flex justify-center items-center">
-      <section className="w-[90%] md:w-[80%] lg:w-[70%] mx-auto bg-white p-2 rounded-xl flex flex-col items-start md:flex-row py-4">
+      <section className="w-[90%] md:w-[80%] lg:w-[70%] mx-auto bg-white p-2 rounded-xl flex flex-col items-start md:flex-row py-4 relative">
+        {user?.admin ? (
+          <Link
+            to={`/admin/EditProduct/${product.id}`}
+            className="absolute right-[-0.5rem] top-[-0.5rem] bg-white p-2 rounded-full"
+          >
+            <FiEdit2 size={20} />
+          </Link>
+        ) : null}
         <div className="flex justify-center w-full md:w-1/2">
           <img
             src={`${BASE_URL}${product?.images[0]?.image}`}
@@ -23,6 +34,7 @@ const ProductPage = () => {
           <h2 className="text-lg md:text-3xl font-bold">{product?.title}</h2>
           <h2 className="text-md font-semibold">{product?.subTitle}</h2>
           <p className="font-bold">Price: ${product?.price}</p>
+          <p className="text-md font-semibold">Brand: {product?.Brand?.name}</p>
           <div className="text-2xl">
             <AiTwotoneLike
               size={27}

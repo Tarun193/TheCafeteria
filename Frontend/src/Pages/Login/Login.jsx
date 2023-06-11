@@ -29,6 +29,7 @@ const LoginPage = () => {
         <form
           onSubmit={(e) => handleLoginSubmition(e)}
           className="p-6 sm:p-12 text-lg sm:text-2xl bg-white rounded-md space-y-4 shadow-lg"
+          autoComplete="off"
         >
           <legend className="text-center font-bold">Login</legend>
           <p className="space-y-2">
@@ -41,6 +42,7 @@ const LoginPage = () => {
               onChange={(e) => setEmail(e.target.value)}
               value={email}
               className="border border-black block p-1"
+              autoComplete="off"
             />
           </p>
           <p className="space-y-2">

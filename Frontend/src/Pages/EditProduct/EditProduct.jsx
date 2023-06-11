@@ -1,25 +1,39 @@
-import { useState } from "react";
-import { useNavigate } from "react-router-dom";
-import UploadImagePreview from "../../Components/ImageUploadPreview/UploadImagePreview";
+import { useEffect, useState } from "react";
+import { useNavigate, useParams, useLocation } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { addProducts } from "../../Features/Products/ProductSlice";
+import {
+  updateProducts,
+  deleteProductImage,
+  selectAllProducts,
+  deleteProduct,
+} from "../../Features/Products/ProductSlice";
 import { selectAllBrands } from "../../Features/Brand/BrandSlice";
-import { getAuthToken, getuserInfo } from "../../Features/auth/authSlice";
+import { getAuthToken } from "../../Features/auth/authSlice";
+import UploadImagePreview from "../../Components/ImageUploadPreview/UploadImagePreview";
 
-const AddProduct = () => {
-  const [title, setTitle] = useState("");
-  const [subTitle, setSubTitle] = useState("");
-  const [price, setPrice] = useState("");
-  const [stock, setStock] = useState("");
-  const [description, setDescription] = useState("");
-  const [image, setImage] = useState("");
+const EditProduct = () => {
+  const { id } = useParams();
+  const products = useSelector(selectAllProducts);
+  const access = useSelector(getAuthToken)?.access;
+  const product = products.find((item) => item.id == id);
+  const [title, setTitle] = useState(product?.title);
+  const [subTitle, setSubTitle] = useState(product?.subTitle);
+  const [price, setPrice] = useState(product?.price);
+  const [stock, setStock] = useState(product?.stock);
+  const [description, setDescription] = useState(product?.description);
+  const [oldImages, setOldImages] = useState(product?.images);
+  const [image, setImage] = useState([]);
   const [requestStatus, setRequestStatus] = useState("idle");
-  const [brand, setBrand] = useState("");
+  const [brand, setBrand] = useState(product?.Brand?.id);
   const [error, setError] = useState("");
   const dispatch = useDispatch();
   const allBrands = useSelector(selectAllBrands);
   const navigate = useNavigate();
-  const access = useSelector(getAuthToken)?.access;
+
+  const canSubmit =
+    [title, subTitle, price, stock, description, brand].every(Boolean) &&
+    requestStatus === "idle" &&
+    (image.length || oldImages.length);
 
   const addImage = (e) => {
     const newImg = [...image];
@@ -29,15 +43,12 @@ const AddProduct = () => {
     setImage(newImg);
   };
 
-  const canSubmit =
-    [title, subTitle, price, stock, description, image, brand].every(Boolean) &&
-    requestStatus === "idle";
-
   const handleSubmit = (e) => {
     e.preventDefault();
     try {
       setRequestStatus("pending");
       const data = new FormData();
+
       image.forEach((img) => data.append("images", img.image, img.image.name));
       data.append("title", title);
       data.append("subTitle", subTitle);
@@ -45,13 +56,17 @@ const AddProduct = () => {
       data.append("stock", stock);
       data.append("description", description);
       data.append("Brand", brand);
-      dispatch(addProducts({ data, access })).unwrap();
+      dispatch(updateProducts({ data, id, access })).unwrap();
       navigate("/");
     } catch (e) {
       console.log(e);
     } finally {
       setRequestStatus("idle");
     }
+  };
+  const handleOldDelete = (id) => {
+    setOldImages(oldImages.filter((img) => img.id != id));
+    dispatch(deleteProductImage({ id, access }));
   };
   return (
     <section>
@@ -163,18 +178,40 @@ const AddProduct = () => {
             </p>
             <p className="text-sm">Preffred Square (450 X 450)</p>
           </div>
-          <UploadImagePreview images={image} setImage={setImage} />
+          <UploadImagePreview
+            images={image}
+            setImage={setImage}
+            oldImages={oldImages}
+            handleOldDelete={handleOldDelete}
+          />
           <button
             type="submit"
             className={
-              `text-md  bg-black text-white rounded-md px-3 sm:text-lg py-2 ` +
+              `text-md  bg-black text-white rounded-md px-3 sm:text-lg py-2 mr-2` +
               (!canSubmit
                 ? "opacity-50 hover:cursor-not-allowed"
                 : "hover:cursor-pointer")
             }
             disabled={!canSubmit}
           >
-            Add Product
+            Update Product
+          </button>
+          <button
+            type="button"
+            onClick={() => navigate(-1)}
+            className={`text-md  bg-black text-white rounded-md px-3 sm:text-lg py-2 mx-2`}
+          >
+            Cancel
+          </button>
+          <button
+            type="button"
+            onClick={() => {
+              dispatch(deleteProduct({ id, access }));
+              navigate("/");
+            }}
+            className={`text-md  bg-black text-white rounded-md px-3 sm:text-lg py-2 mx-2`}
+          >
+            Delete
           </button>
         </form>
       </section>
@@ -182,4 +219,4 @@ const AddProduct = () => {
   );
 };
 
-export default AddProduct;
+export default EditProduct;

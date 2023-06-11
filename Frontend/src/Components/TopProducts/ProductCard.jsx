@@ -4,13 +4,13 @@ import ProductCardImage from "./ProductCardImage";
 import ProductCardContent from "./ProductCardContent";
 import { useNavigate } from "react-router-dom";
 
-const ProductCard = ({ product }) => {
+const ProductCard = ({ product, className }) => {
   const navigate = useNavigate();
   const img = product.images.length ? product.images[0].image : null;
   return (
     <article
-      onClick={() => navigate(`product/${product?.id}`)}
-      className="group relative md:hover:scale-105 sm:max-w-[43%] md:max-w-[35%] lg:max-w-[29%] max-w-[70%] min-w-[70%]  sm:min-w-[43%] md:min-w-[35%] lg:min-w-[29%] shadow-md hover:shadow-lg hover:shadow-stone-600/70 hover:cursor-pointer flex justify-center py-6 rounded-xl shadow-stone-600/60 mb-2 mx-4 bg-white"
+      onClick={() => navigate(`/products/${product?.id}`)}
+      className={`group relative md:hover:scale-105  shadow-md hover:shadow-lg hover:shadow-stone-600/70 hover:cursor-pointer flex justify-center py-6 rounded-xl shadow-stone-600/60 bg-white ${className}`}
     >
       <div className="w-[80%]">
         <ProductCardImage img={`http://127.0.0.1:8000/static${img}`} />

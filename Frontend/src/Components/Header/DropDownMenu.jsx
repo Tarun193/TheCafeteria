@@ -22,9 +22,8 @@ const DropDownMenu = () => {
           className="inline-flex items-center justify-center h-full px-2"
           onClick={() => setMenu(!menu)}
         >
-          <a href="#" className="text-md mx-1">
-            {name}
-          </a>
+          {name}
+
           <svg
             xmlns="http://www.w3.org/2000/svg"
             className="w-4 h-4"
@@ -47,10 +46,7 @@ const DropDownMenu = () => {
           }`}
         >
           <div className="p-2">
-            <a
-              href="#"
-              className="block px-4 py-2 text-sm text-gray-500 rounded-lg hover:bg-gray-50 hover:text-gray-700"
-            >
+            <a className="block px-4 py-2 text-sm text-gray-500 rounded-lg hover:bg-gray-50 hover:text-gray-700">
               Account
             </a>
             {isAdmin ? (

@@ -40,9 +40,12 @@ export const refreshToken = createAsyncThunk(
       const response = await API.post(
         "token/refresh/",
         JSON.stringify({
-          refresh: tokenPair.refresh,
+          refresh: tokenPair?.refresh
+            ? tokenPair?.refresh
+            : localStorage.getItem("refresh"),
         })
       );
+      console.log("refreshed");
       // Checking wheather the old session ID exists or not if yes, we will clear that id and going to create an setInterval for new refresh
       if (sessionTimeID) {
         clearTimeout(sessionTimeID);
@@ -86,6 +89,7 @@ export const authSlice = createSlice({
       if (oldtime) {
         clearTimeout(oldtime);
       }
+      localStorage.removeItem("refresh");
       return { ...initialState };
     },
   },
@@ -99,6 +103,7 @@ export const authSlice = createSlice({
         const user_id = data.user_id;
         const admin = data.admin;
         state.userDetails = { name, user_id, admin };
+        localStorage.setItem("refresh", action.payload.refresh);
       }
     })
       .addCase(userLogin.rejected(), (state, action) => {
@@ -107,8 +112,16 @@ export const authSlice = createSlice({
       })
       .addCase(refreshToken.fulfilled(), (state, action) => {
         if (action.payload) {
-          state.tokenPair.access = action.payload.access;
+          state.tokenPair = {
+            access: action.payload.access,
+            refresh: localStorage.getItem("refresh"),
+          };
           state.loggedIn = true;
+          const data = jwt(action.payload.access);
+          const name = data.name;
+          const user_id = data.user_id;
+          const admin = data.admin;
+          state.userDetails = { name, user_id, admin };
         }
       });
   },
