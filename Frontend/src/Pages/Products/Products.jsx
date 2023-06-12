@@ -2,6 +2,7 @@ import { useSelector } from "react-redux";
 import ProductCard from "../../Components/TopProducts/ProductCard";
 import { selectAllBrands } from "../../Features/Brand/BrandSlice";
 import { useEffect, useState } from "react";
+import FilterMenu from "./FilterMenu";
 const Products = () => {
   const products = [
     {
@@ -180,9 +181,8 @@ const Products = () => {
   const [filteredProducts, setFilteredProducts] = useState([...products]);
   const [selectedBrands, setSelectedBrands] = useState([]);
   const Brands = useSelector(selectAllBrands);
-
+  const [priceFilter, setPriceFilter] = useState("LowToHigh");
   const handleCheckInput = (event) => {
-    console.log(event);
     if (event.target.checked) {
       const newSelectedBrands = [...selectedBrands, event.target.value];
       setSelectedBrands(newSelectedBrands);
@@ -195,16 +195,25 @@ const Products = () => {
   };
 
   useEffect(() => {
-    console.log(selectedBrands);
+    let sortedProducts;
     if (selectedBrands.length) {
-      const newFilteredProducts = products.filter((product) => {
+      sortedProducts = products.filter((product) => {
         return selectedBrands.includes(String(product.Brand.id));
       });
-      setFilteredProducts(newFilteredProducts);
     } else {
-      setFilteredProducts(products);
+      sortedProducts = products;
     }
-  }, [selectedBrands]);
+    const filteredProducts =
+      priceFilter === "LowToHigh"
+        ? sortedProducts.sort((p1, p2) =>
+            p1.price < p2.price ? 1 : p1.price > p2.price ? -1 : 0
+          )
+        : sortedProducts.sort((p1, p2) =>
+            p1.price > p2.price ? 1 : p1.price < p2.price ? -1 : 0
+          );
+    setFilteredProducts(filteredProducts);
+  }, [selectedBrands, priceFilter]);
+
   const BrandFilter = Brands.map((Brand) => (
     <div key={Brand.id} className="flex items-center">
       <input
@@ -221,14 +230,50 @@ const Products = () => {
       </label>
     </div>
   ));
-  console.log(BrandFilter);
+  const priceFilterElement = (
+    <>
+      <div className="flex items-center">
+        <input
+          id="HighToLow"
+          type="radio"
+          value="HighToLow"
+          name="price"
+          className="w-4 h-4"
+          checked={priceFilter === "LowToHigh" ? false : true}
+          onChange={(e) => setPriceFilter(e.target.value)}
+          onTouchStart={(e) => setPriceFilter(e.target.value)}
+        />
+        <label htmlFor="HighToLow" className="ml-2 font-medium">
+          High to Low
+        </label>
+      </div>
+      <div className="flex items-center">
+        <input
+          id="LowToHigh"
+          type="radio"
+          value="LowToHigh"
+          name="price"
+          className="w-4 h-4"
+          checked={priceFilter === "LowToHigh" ? true : false}
+          onChange={(e) => setPriceFilter(e.target.value)}
+          onTouchStart={(e) => setPriceFilter(e.target.value)}
+        />
+        <label htmlFor="" className="ml-2 font-medium">
+          Low to High
+        </label>
+      </div>
+    </>
+  );
   return (
     <section className="flex">
       <section className="md:w-[75%] mx-auto relative px-8">
         <h2 className="text-3xl font-bold my-4 mx-2">Products</h2>
-        {/* <button className="absolute right-0 top-2 border border-black rounded-md px-3">
-          <p className="font-bold text-2xl">Filters</p>
-        </button> */}
+        <FilterMenu
+          BrandFilter={BrandFilter}
+          priceFilterElement={priceFilterElement}
+          className={"md:hidden block absolute top-6 right-10 px-2 z-10"}
+        />
+
         <hr className="h-1 bg-yellow-950 mx-auto rounded-full mt-2"></hr>
         <section className="flex flex-wrap items-center">
           {filteredProducts.map((product, index) => (
@@ -251,32 +296,7 @@ const Products = () => {
         </fieldset>
         <fieldset className="mt-2">
           <legend className="my-1 font-semibold text-lg">Price</legend>
-          <div className="ml-4 space-y-2 text-md">
-            <div className="flex items-center">
-              <input
-                id=""
-                type="radio"
-                value="HighToLow"
-                name="price"
-                className="w-4 h-4"
-              />
-              <label htmlFor="" className="ml-2 font-medium">
-                High to Low
-              </label>
-            </div>
-            <div className="flex items-center">
-              <input
-                id=""
-                type="radio"
-                value="LowToHigh"
-                name="price"
-                className="w-4 h-4"
-              />
-              <label htmlFor="" className="ml-2 font-medium">
-                Low to High
-              </label>
-            </div>
-          </div>
+          <div className="ml-4 space-y-2 text-md">{priceFilterElement}</div>
         </fieldset>
       </section>
     </section>

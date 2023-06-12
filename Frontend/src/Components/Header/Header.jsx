@@ -21,7 +21,7 @@ const Header = () => {
         <SearchBar />
         <nav className="w-full md:w-1/3 md:my-0 mt-4">
           <ul className="text-[0.9rem] md:text-[1rem] lg:text-xl font-semibold flex w-full sm:w-[80%] mx-auto justify-between md:justify-evenly md:w-full">
-            <li>Products</li>
+            <Link to={"/products/"}>Products</Link>
             <li>Cart 🛒</li>
             <li>
               {loggedIN ? (
