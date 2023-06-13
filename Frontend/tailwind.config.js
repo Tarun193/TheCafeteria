@@ -7,6 +7,10 @@ export default {
       fontFamily: {
         roboto: "'Roboto Condensed', sans-serif;",
       },
+      screens: {
+        esm: "425px",
+        // => @media (min-width: 450px) { ... }
+      },
     },
   },
   plugins: [

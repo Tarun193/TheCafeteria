@@ -31,7 +31,7 @@ export const userLogin = createAsyncThunk(
 
 export const refreshToken = createAsyncThunk(
   "refreshToken",
-  async (_, { dispatch, getState }) => {
+  async (_, { dispatch, getState, rejectWithValue }) => {
     try {
       // getting the token pair and referesh session time ID from the the current state.
       const { auth } = getState();
@@ -60,7 +60,8 @@ export const refreshToken = createAsyncThunk(
       dispatch(authSlice.actions.setRefreshTimeID({ refreshID }));
       return response.data;
     } catch (e) {
-      console.log("error is: ", e);
+      dispatch(logout());
+      rejectWithValue(e.response.data);
     }
   }
 );

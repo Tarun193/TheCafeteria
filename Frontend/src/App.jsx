@@ -16,6 +16,7 @@ import PrivateRoutes from "./utils/PrivateRoute/PrivateRoute";
 import EditProduct from "./Pages/EditProduct/EditProduct";
 import { useEffect } from "react";
 import Products from "./Pages/Products/Products";
+import CartPage from "./Pages/Cart/CartPage";
 
 function App() {
   const dispatch = useDispatch();
@@ -30,12 +31,13 @@ function App() {
       <Routes>
         <Route path="/" element={<Layout />}>
           <Route index element={<Home />} />
+          <Route path="Login" element={<LoginPage />} />
+          <Route path="Signup" element={<SignUpPage />} />
+          <Route path="cart" element={<CartPage />} />
           <Route path="products">
             <Route index element={<Products />} />
             <Route path=":id" element={<ProductPage />} />
           </Route>
-          <Route path="Login" element={<LoginPage />} />
-          <Route path="Signup" element={<SignUpPage />} />
           <Route path="admin" element={<PrivateRoutes />}>
             <Route path="addProduct" element={<AddProduct />} />
             <Route path="EditProduct/:id" element={<EditProduct />} />
