@@ -49,13 +49,15 @@ const EditProduct = () => {
       setRequestStatus("pending");
       const data = new FormData();
 
-      image.forEach((img) => data.append("images", img.image, img.image.name));
+      image.forEach((img) =>
+        data.append("images_data", img.image, img.image.name)
+      );
       data.append("title", title);
       data.append("subTitle", subTitle);
       data.append("price", price);
       data.append("stock", stock);
       data.append("description", description);
-      data.append("Brand", brand);
+      data.append("brand_id", brand);
       dispatch(updateProducts({ data, id, access })).unwrap();
       navigate("/");
     } catch (e) {

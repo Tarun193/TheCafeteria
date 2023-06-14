@@ -8,6 +8,7 @@ const initialState = {
   products: [],
   status: "idle",
   error: "",
+  proccessing: false,
 };
 
 export const fetchProducts = createAsyncThunk(

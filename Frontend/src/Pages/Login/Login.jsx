@@ -1,5 +1,11 @@
 import { useEffect, useState } from "react";
-import { userLogin, isLoggedIn, getError } from "../../Features/auth/authSlice";
+import {
+  userLogin,
+  isLoggedIn,
+  getError,
+  getProccessingStatus,
+  setProccessing,
+} from "../../Features/auth/authSlice";
 import { useDispatch, useSelector } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
 import Alert from "../../Components/Alert/Alert";
@@ -10,22 +16,28 @@ const LoginPage = () => {
   const dispatch = useDispatch();
   const LoggedIn = useSelector(isLoggedIn);
   const loginError = useSelector(getError);
+  const proccessing = useSelector(getProccessingStatus);
   const navigate = useNavigate();
 
   useEffect(() => {
-    if (LoggedIn) {
+    if (LoggedIn && !proccessing) {
       navigate("/");
     }
-  }, [LoggedIn]);
+  }, [proccessing]);
 
   const handleLoginSubmition = (e) => {
     e.preventDefault();
+    dispatch(setProccessing({ proccessing: true }));
     dispatch(userLogin({ email: email, password: password }));
   };
 
   return (
     <section>
-      <section className="min-h-[80vh] flex justify-center items-center">
+      <section
+        className={`min-h-[80vh] flex justify-center items-center ${
+          proccessing ? "opacity-40" : null
+        }`}
+      >
         <form
           onSubmit={(e) => handleLoginSubmition(e)}
           className="p-6 sm:p-12 text-lg sm:text-2xl bg-white rounded-md space-y-4 shadow-lg"

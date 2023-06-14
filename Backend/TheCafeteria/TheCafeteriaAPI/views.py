@@ -1,11 +1,17 @@
 # Important Imports
-from .Serializer import ProductSerializer, CustomUserSerilizer, BrandSerializer
+from .Serializer import (
+    ProductSerializer,
+    CustomUserSerilizer,
+    BrandSerializer,
+    CartItemSerializer,
+    CartSerializer,
+)
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated, IsAdminUser
 
-from .models import Product, CustomUser, ProductImages, Brand
+from .models import Product, CustomUser, ProductImages, Brand, Cart, CartItem
 
 
 @api_view(["GET", "POST"])
@@ -87,3 +93,10 @@ def Image(request, id=None):
         return Response({"message": "success"}, status=200)
 
     return Response({"message": "success"}, status=200)
+
+
+@api_view(["GET"])
+def getCart(request, pk=None):
+    cart = Cart.objects.get(pk=pk)
+    cartData = CartSerializer(cart, many=False)
+    return Response(cartData.data)

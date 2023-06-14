@@ -41,3 +41,21 @@ class ProductImages(models.Model):
         Product, on_delete=models.CASCADE, related_name="images"
     )
     image = models.ImageField(upload_to="ProductImages/")
+
+
+class Cart(models.Model):
+    user = models.OneToOneField(
+        CustomUser, on_delete=models.CASCADE, related_name="Cart"
+    )
+
+    def __str__(self):
+        return self.user.first_name + "s' Cart"
+
+
+class CartItem(models.Model):
+    product = models.OneToOneField(Product, on_delete=models.CASCADE, name="product")
+    quantity = models.IntegerField(default=0)
+    cart = models.ForeignKey(Cart, on_delete=models.CASCADE, related_name="cartItem")
+
+    def __str__(self):
+        return self.product.title + " Item"

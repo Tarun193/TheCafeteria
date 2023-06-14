@@ -10,41 +10,64 @@ import SignUpPage from "./Pages/SignUp/SignUpPage";
 import { getuserInfo, refreshToken } from "./Features/auth/authSlice";
 import { useDispatch, useSelector } from "react-redux";
 import AddProduct from "./Pages/AddProduct/AddProduct";
-import { selectAllProducts } from "./Features/Products/ProductSlice";
-import { selectAllBrands } from "./Features/Brand/BrandSlice";
+import {
+  selectProductsStatus,
+  fetchProducts,
+} from "./Features/Products/ProductSlice";
+import { selectBrandStatus, fetchBrands } from "./Features/Brand/BrandSlice";
 import PrivateRoutes from "./utils/PrivateRoute/PrivateRoute";
 import EditProduct from "./Pages/EditProduct/EditProduct";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import Products from "./Pages/Products/Products";
 import CartPage from "./Pages/Cart/CartPage";
 
 function App() {
   const dispatch = useDispatch();
+  const productStatus = useSelector(selectProductsStatus);
+  const brandStatus = useSelector(selectBrandStatus);
+  const [loading, setLoading] = useState(true);
   useEffect(() => {
     const refresh = localStorage.getItem("refresh");
-    if (refresh) {
-      dispatch(refreshToken());
+    if (loading) {
+      if (refresh) {
+        dispatch(refreshToken());
+      }
+      if (productStatus === "idle") {
+        dispatch(fetchProducts());
+      }
+      if (brandStatus === "idle") {
+        dispatch(fetchBrands());
+      }
+      setLoading(false);
+    } else {
+      // load cartitems if user is logged in.
     }
-  });
+  }, [loading]);
   return (
-    <Router>
-      <Routes>
-        <Route path="/" element={<Layout />}>
-          <Route index element={<Home />} />
-          <Route path="Login" element={<LoginPage />} />
-          <Route path="Signup" element={<SignUpPage />} />
-          <Route path="cart" element={<CartPage />} />
-          <Route path="products">
-            <Route index element={<Products />} />
-            <Route path=":id" element={<ProductPage />} />
-          </Route>
-          <Route path="admin" element={<PrivateRoutes />}>
-            <Route path="addProduct" element={<AddProduct />} />
-            <Route path="EditProduct/:id" element={<EditProduct />} />
-          </Route>
-        </Route>
-      </Routes>
-    </Router>
+    <>
+      {loading ? (
+        <h1>Loading</h1>
+      ) : (
+        <Router>
+          <Routes>
+            <Route path="/" element={<Layout />}>
+              <Route index element={<Home />} />
+              <Route path="Login" element={<LoginPage />} />
+              <Route path="Signup" element={<SignUpPage />} />
+              <Route path="cart" element={<CartPage />} />
+              <Route path="products">
+                <Route index element={<Products />} />
+                <Route path=":id" element={<ProductPage />} />
+              </Route>
+              <Route path="admin" element={<PrivateRoutes />}>
+                <Route path="addProduct" element={<AddProduct />} />
+                <Route path="EditProduct/:id" element={<EditProduct />} />
+              </Route>
+            </Route>
+          </Routes>
+        </Router>
+      )}
+    </>
   );
 }
 

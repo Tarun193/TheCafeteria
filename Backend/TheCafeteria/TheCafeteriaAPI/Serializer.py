@@ -1,6 +1,6 @@
 from rest_framework import serializers
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
-from .models import Product, ProductImages, CustomUser, Brand
+from .models import Product, ProductImages, CustomUser, Brand, CartItem, Cart
 
 
 class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
@@ -31,10 +31,16 @@ class BrandSerializer(serializers.ModelSerializer):
 
 
 class ProductSerializer(serializers.ModelSerializer):
-    images = serializers.ListField(
+    images_data = serializers.ListField(
         child=serializers.ImageField(), write_only=True, required=False
     )
-    Brand = serializers.PrimaryKeyRelatedField(queryset=Brand.objects.all())
+    # for this field get_images method will be called which will return the serialized images data related to product
+    images = serializers.SerializerMethodField()
+    brand_id = serializers.PrimaryKeyRelatedField(
+        source="Brand", queryset=Brand.objects.all(), write_only=True
+    )
+
+    Brand = serializers.SerializerMethodField()
 
     class Meta:
         model = Product
@@ -48,7 +54,17 @@ class ProductSerializer(serializers.ModelSerializer):
             "likes",
             "images",
             "Brand",
+            "brand_id",
+            "images_data",
         )
+
+    # This method will return serialized image data to the images field.
+    def get_images(self, obj):
+        return ProductImagesSerializer(obj.images.all(), many=True).data
+
+    # This method will return serilized data for brand which is related to product
+    def get_Brand(self, obj):
+        return BrandSerializer(obj.Brand).data
 
     def create(self, validated_data):
         images_data = validated_data.pop("images")
@@ -71,11 +87,6 @@ class ProductSerializer(serializers.ModelSerializer):
         instance.save()
         return instance
 
-    def to_representation(self, instance):
-        self.fields["images"] = ProductImagesSerializer(many=True)
-        self.fields["Brand"] = BrandSerializer()
-        return super(ProductSerializer, self).to_representation(instance)
-
 
 class CustomUserSerilizer(serializers.ModelSerializer):
     class Meta:
@@ -92,3 +103,32 @@ class CustomUserSerilizer(serializers.ModelSerializer):
         user.set_password(validated_data["password"])
         user.save()
         return user
+
+
+class CartItemSerializer(serializers.ModelSerializer):
+    product_id = serializers.PrimaryKeyRelatedField(
+        source="product", queryset=Product.objects.all(), write_only=True
+    )
+    product = serializers.SerializerMethodField()
+
+    cart_id = serializers.PrimaryKeyRelatedField(
+        source="cart", queryset=Cart.objects.all(), write_only=True
+    )
+
+    class Meta:
+        model = CartItem
+        fields = ("product_id", "product", "cart_id", "quantity")
+
+    def get_product(self, cartItem):
+        return ProductSerializer(cartItem.product).data
+
+
+class CartSerializer(serializers.ModelSerializer):
+    cartItems = serializers.SerializerMethodField()
+
+    class Meta:
+        model = Cart
+        fields = ("cartItems",)
+
+    def get_cartItems(self, Cart):
+        return CartItemSerializer(Cart.cartItem.all(), many=True).data

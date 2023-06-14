@@ -8,6 +8,7 @@ const initialState = {
   userDetails: null,
   sessionTimeID: null,
   error: "",
+  proccessing: null,
 };
 
 export const userLogin = createAsyncThunk(
@@ -93,6 +94,9 @@ export const authSlice = createSlice({
       localStorage.removeItem("refresh");
       return { ...initialState };
     },
+    setProccessing(state, action) {
+      state.proccessing = action.payload.proccessing;
+    },
   },
   extraReducers(Builder) {
     Builder.addCase(userLogin.fulfilled(), (state, action) => {
@@ -105,6 +109,7 @@ export const authSlice = createSlice({
         const admin = data.admin;
         state.userDetails = { name, user_id, admin };
         localStorage.setItem("refresh", action.payload.refresh);
+        state.proccessing = false;
       }
     })
       .addCase(userLogin.rejected(), (state, action) => {
@@ -132,5 +137,6 @@ export const getAuthToken = (state) => state.auth.tokenPair;
 export const isLoggedIn = (state) => state.auth.loggedIn;
 export const getuserInfo = (state) => state.auth.userDetails;
 export const getError = (state) => state.auth.error;
-export const { logout } = authSlice.actions;
+export const getProccessingStatus = (state) => state.auth.proccessing;
+export const { logout, setProccessing } = authSlice.actions;
 export default authSlice.reducer;
