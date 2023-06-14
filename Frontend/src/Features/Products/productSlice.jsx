@@ -8,7 +8,7 @@ const initialState = {
   products: [],
   status: "idle",
   error: "",
-  proccessing: false,
+  processing: false,
 };
 
 export const fetchProducts = createAsyncThunk(
@@ -18,7 +18,6 @@ export const fetchProducts = createAsyncThunk(
       const response = await API.get("/products");
       return [...response.data];
     } catch (e) {
-      console.log("Error is: ", e);
       throw e; // Add this line to rethrow the error
     }
   }
@@ -54,7 +53,6 @@ export const updateProducts = createAsyncThunk(
       });
       return response.data;
     } catch (e) {
-      console.log(e);
       thunkAPI.rejectWithValue(e);
     }
   }
@@ -73,7 +71,6 @@ export const deleteProduct = createAsyncThunk(
       });
       return id;
     } catch (e) {
-      console.log(e);
       thunkAPI.rejectWithValue(e);
     }
   }
@@ -92,7 +89,6 @@ export const deleteProductImage = createAsyncThunk(
         },
       });
     } catch (e) {
-      console.log(e);
       thunkAPI.rejectWithValue(e);
     }
   }

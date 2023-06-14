@@ -16,18 +16,18 @@ const LoginPage = () => {
   const dispatch = useDispatch();
   const LoggedIn = useSelector(isLoggedIn);
   const loginError = useSelector(getError);
-  const proccessing = useSelector(getProccessingStatus);
+  const processing = useSelector(getProccessingStatus);
   const navigate = useNavigate();
 
   useEffect(() => {
-    if (LoggedIn && !proccessing) {
+    if (LoggedIn && !processing) {
       navigate("/");
     }
-  }, [proccessing]);
+  }, [processing]);
 
   const handleLoginSubmition = (e) => {
     e.preventDefault();
-    dispatch(setProccessing({ proccessing: true }));
+    dispatch(setProccessing({ processing: true }));
     dispatch(userLogin({ email: email, password: password }));
   };
 
@@ -35,7 +35,7 @@ const LoginPage = () => {
     <section>
       <section
         className={`min-h-[80vh] flex justify-center items-center ${
-          proccessing ? "opacity-40" : null
+          processing ? "opacity-40" : null
         }`}
       >
         <form

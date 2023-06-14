@@ -3,7 +3,7 @@ import { Outlet, Navigate, useLocation } from "react-router-dom";
 import { getuserInfo } from "../../Features/auth/authSlice";
 import { useSelector } from "react-redux";
 
-const PrivateRoutes = () => {
+const PrivateAdminRoutes = () => {
   const { pathname } = useLocation();
   const [isValidToken, setIsValidToken] = useState();
   const userData = useSelector(getuserInfo);
@@ -24,4 +24,4 @@ const PrivateRoutes = () => {
   return isValidToken ? <Outlet /> : <Navigate to="/Login" replace />;
 };
 
-export default PrivateRoutes;
+export default PrivateAdminRoutes;

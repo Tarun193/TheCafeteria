@@ -2,7 +2,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import UploadImagePreview from "../../Components/ImageUploadPreview/UploadImagePreview";
 import { useDispatch, useSelector } from "react-redux";
-import { addProducts } from "../../Features/Products/ProductSlice";
+import { addProducts } from "../../Features/Products/productSlice";
 import { selectAllBrands } from "../../Features/Brand/BrandSlice";
 import { getAuthToken, getuserInfo } from "../../Features/auth/authSlice";
 
@@ -50,7 +50,6 @@ const AddProduct = () => {
       dispatch(addProducts({ data, access })).unwrap();
       navigate("/");
     } catch (e) {
-      console.log(e);
     } finally {
       setRequestStatus("idle");
     }

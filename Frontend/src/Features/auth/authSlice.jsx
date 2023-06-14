@@ -8,7 +8,7 @@ const initialState = {
   userDetails: null,
   sessionTimeID: null,
   error: "",
-  proccessing: null,
+  processing: null,
 };
 
 export const userLogin = createAsyncThunk(
@@ -17,7 +17,7 @@ export const userLogin = createAsyncThunk(
     try {
       const response = await API.post("token/", JSON.stringify(userInfo));
       // refreshing tokens with given Interval;
-      const refreshInterval = 60 * 1000;
+      const refreshInterval = 4.5 * 60 * 1000;
       const refreshID = setTimeout(
         () => dispatch(refreshToken()),
         refreshInterval
@@ -46,14 +46,13 @@ export const refreshToken = createAsyncThunk(
             : localStorage.getItem("refresh"),
         })
       );
-      console.log("refreshed");
       // Checking wheather the old session ID exists or not if yes, we will clear that id and going to create an setInterval for new refresh
       if (sessionTimeID) {
         clearTimeout(sessionTimeID);
       }
 
       // refreshing tokens with given Interval;
-      const refreshInterval = 60 * 1000;
+      const refreshInterval = 4.5 * 60 * 1000;
       const refreshID = setTimeout(
         () => dispatch(refreshToken()),
         refreshInterval
@@ -72,7 +71,6 @@ export const userSignUp = createAsyncThunk(
   async (SignUpInfo, ThunkAPI) => {
     try {
       const response = await API.post("SignUp/", SignUpInfo);
-      console.log(response.data);
     } catch (e) {
       return ThunkAPI.rejectWithValue(e.response.data);
     }
@@ -95,7 +93,7 @@ export const authSlice = createSlice({
       return { ...initialState };
     },
     setProccessing(state, action) {
-      state.proccessing = action.payload.proccessing;
+      state.processing = action.payload.processing;
     },
   },
   extraReducers(Builder) {
@@ -109,12 +107,12 @@ export const authSlice = createSlice({
         const admin = data.admin;
         state.userDetails = { name, user_id, admin };
         localStorage.setItem("refresh", action.payload.refresh);
-        state.proccessing = false;
+        state.processing = false;
       }
     })
       .addCase(userLogin.rejected(), (state, action) => {
         state.error = action.payload.detail;
-        console.log(action.payload.detail, "set");
+        state.processing = false;
       })
       .addCase(refreshToken.fulfilled(), (state, action) => {
         if (action.payload) {
@@ -137,6 +135,6 @@ export const getAuthToken = (state) => state.auth.tokenPair;
 export const isLoggedIn = (state) => state.auth.loggedIn;
 export const getuserInfo = (state) => state.auth.userDetails;
 export const getError = (state) => state.auth.error;
-export const getProccessingStatus = (state) => state.auth.proccessing;
+export const getProccessingStatus = (state) => state.auth.processing;
 export const { logout, setProccessing } = authSlice.actions;
 export default authSlice.reducer;

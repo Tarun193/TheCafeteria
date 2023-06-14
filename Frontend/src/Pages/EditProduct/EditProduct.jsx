@@ -6,7 +6,7 @@ import {
   deleteProductImage,
   selectAllProducts,
   deleteProduct,
-} from "../../Features/Products/ProductSlice";
+} from "../../Features/Products/productSlice";
 import { selectAllBrands } from "../../Features/Brand/BrandSlice";
 import { getAuthToken } from "../../Features/auth/authSlice";
 import UploadImagePreview from "../../Components/ImageUploadPreview/UploadImagePreview";
@@ -61,7 +61,6 @@ const EditProduct = () => {
       dispatch(updateProducts({ data, id, access })).unwrap();
       navigate("/");
     } catch (e) {
-      console.log(e);
     } finally {
       setRequestStatus("idle");
     }

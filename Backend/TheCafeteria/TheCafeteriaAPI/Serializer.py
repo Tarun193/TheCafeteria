@@ -1,6 +1,6 @@
 from rest_framework import serializers
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
-from .models import Product, ProductImages, CustomUser, Brand, CartItem, Cart
+from .models import Product, ProductImages, CustomUser, Brand, CartItem
 
 
 class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
@@ -107,28 +107,27 @@ class CustomUserSerilizer(serializers.ModelSerializer):
 
 class CartItemSerializer(serializers.ModelSerializer):
     product_id = serializers.PrimaryKeyRelatedField(
-        source="product", queryset=Product.objects.all(), write_only=True
+        source="product",
+        queryset=Product.objects.all(),
+        write_only=True,
+        required=False,
+    )
+    user_id = serializers.PrimaryKeyRelatedField(
+        source="CustomUser",
+        queryset=CustomUser.objects.all(),
+        write_only=True,
+        required=False,
     )
     product = serializers.SerializerMethodField()
 
-    cart_id = serializers.PrimaryKeyRelatedField(
-        source="cart", queryset=Cart.objects.all(), write_only=True
-    )
-
     class Meta:
         model = CartItem
-        fields = ("product_id", "product", "cart_id", "quantity")
+        fields = ("product_id", "product", "quantity", "user_id", "id")
 
     def get_product(self, cartItem):
         return ProductSerializer(cartItem.product).data
 
-
-class CartSerializer(serializers.ModelSerializer):
-    cartItems = serializers.SerializerMethodField()
-
-    class Meta:
-        model = Cart
-        fields = ("cartItems",)
-
-    def get_cartItems(self, Cart):
-        return CartItemSerializer(Cart.cartItem.all(), many=True).data
+    def update(self, instance, validated_data):
+        instance.quantity = validated_data.get("quantity", instance.quantity)
+        instance.save()
+        return instance
