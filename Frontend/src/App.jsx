@@ -63,7 +63,7 @@ function App() {
     if (!loggedIn) {
       dispatch(resetCart());
     }
-  }, [loading, loggedIn]);
+  }, [loading, loggedIn, brandStatus, productStatus]);
   return (
     <>
       {loading ? (

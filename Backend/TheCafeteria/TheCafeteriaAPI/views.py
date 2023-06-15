@@ -9,6 +9,7 @@ from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated, IsAdminUser
+from rest_framework.status import HTTP_204_NO_CONTENT
 
 from .models import Product, CustomUser, ProductImages, Brand, CartItem
 
@@ -94,7 +95,7 @@ def Image(request, id=None):
     return Response({"message": "success"}, status=200)
 
 
-@api_view(["GET", "PUT"])
+@api_view(["GET", "PUT", "POST"])
 @permission_classes([IsAuthenticated])
 def getCartItems(request, pk=None):
     if request.method == "GET":
@@ -102,14 +103,23 @@ def getCartItems(request, pk=None):
         cartItemsData = CartItemSerializer(cartItems, many=True).data
         return Response(cartItemsData)
 
-    if request.method == "PSOT":
-        pass
+    if request.method == "POST":
+        cartItem = CartItem.objects.filter(
+            product__id=request.data.get("product_id")
+        ).filter(user__id=pk)
+        if not cartItem:
+            Item = CartItemSerializer(data=request.data)
+            if Item.is_valid():
+                Item.save()
+                return Response(Item.data)
+        else:
+            return Response({}, status=HTTP_204_NO_CONTENT)
+
     if request.method == "PUT":
         cart_id = request.data.pop("cartItem_id")
         cartItems = CartItem.objects.get(pk=cart_id)
         print(cartItems)
         newCartItem = CartItemSerializer(instance=cartItems, data=request.data)
         if newCartItem.is_valid():
-            print("hello")
             newCartItem.save()
             return Response(newCartItem.data)

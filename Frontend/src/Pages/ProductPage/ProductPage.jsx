@@ -1,24 +1,47 @@
-import { Link, useParams } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import { selectAllProducts } from "../../Features/Products/ProductSlice";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { BASE_URL } from "../../utils/API/api";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { AiTwotoneLike } from "react-icons/ai";
 import { FiEdit2 } from "react-icons/fi";
-import { getuserInfo } from "../../Features/auth/authSlice";
+import {
+  getAuthToken,
+  getuserInfo,
+  isLoggedIn,
+} from "../../Features/auth/authSlice";
+import { addCartItem } from "../../Features/cartSlice/cartSlice";
 
 const ProductPage = () => {
   const { id } = useParams();
   const products = useSelector(selectAllProducts);
   const product = products.find((item) => item.id == id);
-  const [quatity, setQuntity] = useState(1);
+  const [quantity, setQuntity] = useState(1);
+  const [loading, setLoading] = useState(true);
   const user = useSelector(getuserInfo);
+  const access = useSelector(getAuthToken)?.access;
+  const loggedIn = useSelector(isLoggedIn);
+  const user_id = useSelector(getuserInfo)?.user_id;
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+
+  const handleAddToCart = (product_id) => {
+    if (loggedIn) {
+      const data = {
+        Data: { quantity, product_id, user_id },
+        access,
+      };
+      dispatch(addCartItem(data)).unwrap();
+    } else {
+      navigate("/Login/");
+    }
+  };
   return (
     <section className="w-full my-10 flex justify-center items-center">
       <section className="w-[90%] md:w-[80%] lg:w-[70%] mx-auto bg-white p-2 rounded-xl flex flex-col items-start md:flex-row py-4 relative">
         {user?.admin ? (
           <Link
-            to={`/admin/EditProduct/${product.id}`}
+            to={`/admin/EditProduct/${product?.id}`}
             className="absolute right-[-0.5rem] top-[-0.5rem] bg-white p-2 rounded-full"
           >
             <FiEdit2 size={20} />
@@ -45,7 +68,7 @@ const ProductPage = () => {
           <div>
             <button
               onClick={() => {
-                if (quatity > 0) setQuntity(quatity - 1);
+                if (quantity > 0) setQuntity(quantity - 1);
               }}
               className="w-10 h-10 border"
             >
@@ -54,12 +77,12 @@ const ProductPage = () => {
             <input
               type="number"
               className="text-center w-10 h-10 [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none border"
-              value={quatity}
+              value={quantity}
               onChange={(e) => setQuntity(e.target.value)}
             />
             <button
               className="w-10 h-10 border"
-              onClick={() => setQuntity(quatity + 1)}
+              onClick={() => setQuntity(quantity + 1)}
             >
               +
             </button>
@@ -68,7 +91,10 @@ const ProductPage = () => {
             <button className="text-md mt-2 bg-black text-white rounded-lg px-3 sm:text-lg py-2">
               Buy Now
             </button>
-            <button className="text-md  bg-black text-white rounded-lg px-3 sm:text-lg py-2 mx-1 mt-2">
+            <button
+              className="text-md  bg-black text-white rounded-lg px-3 sm:text-lg py-2 mx-1 mt-2"
+              onClick={() => handleAddToCart(product.id)}
+            >
               Add To Cart
             </button>
           </div>

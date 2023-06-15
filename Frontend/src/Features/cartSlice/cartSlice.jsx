@@ -24,6 +24,24 @@ export const fetchCart = createAsyncThunk(
   }
 );
 
+export const addCartItem = createAsyncThunk(
+  "Cart/addCartItem",
+  async (data, thunkAPI) => {
+    const { Data, access } = data;
+    try {
+      const response = await API.post(`${Data.user_id}/cart/`, Data, {
+        headers: {
+          Authorization: "Bearer " + access,
+        },
+      });
+      return response.data;
+    } catch (e) {
+      console.log(e);
+      thunkAPI.rejectWithValue(e.response.data);
+    }
+  }
+);
+
 export const updateCartProductQuantity = createAsyncThunk(
   "Cart/updateCartProductQuantity",
   async (data, thunkAPI) => {
@@ -51,9 +69,15 @@ const cartSlice = createSlice({
     },
   },
   extraReducers(Builder) {
-    Builder.addCase(fetchCart.pending(), (state, action) => {
-      state.status = "loading";
+    Builder.addCase(addCartItem.fulfilled(), (state, action) => {
+      if (action.payload) {
+        state.cart.push(action.payload);
+        console.log(action.payload);
+      }
     })
+      .addCase(fetchCart.pending(), (state, action) => {
+        state.status = "loading";
+      })
       .addCase(fetchCart.fulfilled(), (state, action) => {
         state.cart = action.payload;
         state.status = "success";

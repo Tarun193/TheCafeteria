@@ -113,7 +113,7 @@ class CartItemSerializer(serializers.ModelSerializer):
         required=False,
     )
     user_id = serializers.PrimaryKeyRelatedField(
-        source="CustomUser",
+        source="user",
         queryset=CustomUser.objects.all(),
         write_only=True,
         required=False,

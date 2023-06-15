@@ -26,9 +26,16 @@ const LoginPage = () => {
   }, [processing]);
 
   const handleLoginSubmition = (e) => {
-    e.preventDefault();
-    dispatch(setProccessing({ processing: true }));
-    dispatch(userLogin({ email: email, password: password }));
+    try {
+      e.preventDefault();
+      dispatch(setProccessing({ processing: true }));
+      dispatch(userLogin({ email: email, password: password })).unwrap();
+      if (LoggedIn) {
+        navigate(-1);
+      }
+    } catch (e) {
+      console.log(e);
+    }
   };
 
   return (

@@ -44,11 +44,11 @@ class ProductImages(models.Model):
 
 
 class CartItem(models.Model):
-    product = models.OneToOneField(Product, on_delete=models.CASCADE, name="product")
+    product = models.ForeignKey(Product, on_delete=models.CASCADE, name="product")
     quantity = models.IntegerField(default=0)
-    user = models.OneToOneField(
+    user = models.ForeignKey(
         CustomUser, on_delete=models.CASCADE, related_name="user", blank=True, null=True
     )
 
     def __str__(self):
-        return self.product.title + " Item"
+        return self.user.first_name + " " + self.product.title + " Item"

@@ -53,12 +53,12 @@ const CartPage = () => {
             <h2 className="text-2xl font-semibold text-center">My Cart</h2>
             <hr className="my-2 h-1 w-[80%] bg-yellow-950 mx-auto"></hr>
             <div>
-              {!cart ? (
+              {!cart?.length ? (
                 <h1 className="text-center my-8 text-xl font-bold">
                   Nothing in Cart
                 </h1>
               ) : (
-                cart.map((cartItem) => (
+                cart?.map((cartItem) => (
                   <article
                     key={cartItem?.product?.id}
                     className="w-full m-2 p-2 border-b-black flex esm:flex-row flex-col"
@@ -103,7 +103,7 @@ const CartPage = () => {
                 ))
               )}
             </div>
-            {!cart ? null : (
+            {!cart?.length ? null : (
               <>
                 <hr className="my-2 h-1 w-[80%] bg-yellow-950 mx-auto"></hr>
                 <section className="p-4 space-y-2 font-semibold w-full sm:w-1/2">
