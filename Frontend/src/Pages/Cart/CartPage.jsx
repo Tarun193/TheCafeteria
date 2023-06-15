@@ -2,6 +2,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { BASE_URL } from "../../utils/API/api";
 import { useEffect, useState } from "react";
 import {
+  removeCartItem,
   selectCart,
   selectCartStatus,
   updateCartProductQuantity,
@@ -38,6 +39,19 @@ const CartPage = () => {
       access,
     };
     dispatch(updateCartProductQuantity(data));
+  };
+
+  const handleRemoveCartItem = (cart_id) => {
+    try {
+      const data = {
+        cart_id,
+        userId,
+        access,
+      };
+      dispatch(removeCartItem(data)).unwrap();
+    } catch (e) {
+      console.log(e);
+    }
   };
 
   const options = quantityOptions.map((op) => (
@@ -97,7 +111,12 @@ const CartPage = () => {
                             Number(cartItem?.quantity)
                         ).toFixed(2)}
                       </p>
-                      <button className="text-md text-red-400">Remove</button>
+                      <button
+                        onClick={() => handleRemoveCartItem(cartItem?.id)}
+                        className="text-md text-red-400"
+                      >
+                        Remove
+                      </button>
                     </div>
                   </article>
                 ))

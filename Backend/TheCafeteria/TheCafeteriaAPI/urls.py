@@ -14,6 +14,7 @@ urlpatterns = [
     path("SignUp/", view=SignUp),
     path("image/<int:id>", view=Image),
     path("<int:pk>/cart/", view=getCartItems),
+    path("<int:pk>/cart/<int:cart_id>", view=getCartItems),
     path("token/", view=TokenObtainPairView.as_view(), name="token_obtain_pair"),
     path("token/refresh/", TokenRefreshView.as_view(), name="token_refresh"),
 ]

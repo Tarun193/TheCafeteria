@@ -45,7 +45,7 @@ function App() {
   useEffect(() => {
     if (loading) {
       const refresh = localStorage.getItem("refresh");
-      if (refresh) {
+      if (refresh && !loggedIn) {
         dispatch(refreshToken());
       }
       if (productStatus === "idle") {
@@ -54,7 +54,7 @@ function App() {
       if (brandStatus === "idle") {
         dispatch(fetchBrands());
       }
-      setLoading(false);
+      setTimeout(() => setLoading(false), 500);
     }
     if (cartStatus === "idle" && loggedIn) {
       console.log("test");
@@ -63,7 +63,7 @@ function App() {
     if (!loggedIn) {
       dispatch(resetCart());
     }
-  }, [loading, loggedIn, brandStatus, productStatus]);
+  }, [loading, loggedIn]);
   return (
     <>
       {loading ? (

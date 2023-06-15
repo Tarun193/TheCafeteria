@@ -95,9 +95,9 @@ def Image(request, id=None):
     return Response({"message": "success"}, status=200)
 
 
-@api_view(["GET", "PUT", "POST"])
+@api_view(["GET", "PUT", "POST", "DELETE"])
 @permission_classes([IsAuthenticated])
-def getCartItems(request, pk=None):
+def getCartItems(request, pk=None, cart_id=None):
     if request.method == "GET":
         cartItems = CartItem.objects.filter(user=pk)
         cartItemsData = CartItemSerializer(cartItems, many=True).data
@@ -123,3 +123,8 @@ def getCartItems(request, pk=None):
         if newCartItem.is_valid():
             newCartItem.save()
             return Response(newCartItem.data)
+
+    if request.method == "DELETE":
+        cartItem = CartItem.objects.get(pk=cart_id)
+        cartItem.delete()
+        return Response({"id": cart_id})

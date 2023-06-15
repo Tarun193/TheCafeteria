@@ -21,7 +21,7 @@ const ProductPage = () => {
   const user = useSelector(getuserInfo);
   const access = useSelector(getAuthToken)?.access;
   const loggedIn = useSelector(isLoggedIn);
-  const user_id = useSelector(getuserInfo)?.user_id;
+  const user_id = user?.user_id;
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
@@ -88,7 +88,13 @@ const ProductPage = () => {
             </button>
           </div>
           <div>
-            <button className="text-md mt-2 bg-black text-white rounded-lg px-3 sm:text-lg py-2">
+            <button
+              onClick={() => {
+                handleAddToCart(product.id);
+                navigate(`/user/cart/`);
+              }}
+              className="text-md mt-2 bg-black text-white rounded-lg px-3 sm:text-lg py-2"
+            >
               Buy Now
             </button>
             <button

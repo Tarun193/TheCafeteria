@@ -42,6 +42,24 @@ export const addCartItem = createAsyncThunk(
   }
 );
 
+export const removeCartItem = createAsyncThunk(
+  "Cart/removeCartItem",
+  async (data, thunkAPI) => {
+    const { userId, cart_id, access } = data;
+    try {
+      const response = await API.delete(`${userId}/cart/${cart_id}`, {
+        headers: {
+          Authorization: "Bearer " + access,
+        },
+      });
+      return response.data;
+    } catch (e) {
+      console.log(e);
+      thunkAPI.rejectWithValue(e.response.data);
+    }
+  }
+);
+
 export const updateCartProductQuantity = createAsyncThunk(
   "Cart/updateCartProductQuantity",
   async (data, thunkAPI) => {
@@ -72,7 +90,6 @@ const cartSlice = createSlice({
     Builder.addCase(addCartItem.fulfilled(), (state, action) => {
       if (action.payload) {
         state.cart.push(action.payload);
-        console.log(action.payload);
       }
     })
       .addCase(fetchCart.pending(), (state, action) => {
@@ -87,11 +104,15 @@ const cartSlice = createSlice({
           (cartitem) => cartitem.id != action.payload.id
         );
         state.cart.push(action.payload);
+      })
+      .addCase(removeCartItem.fulfilled(), (state, action) => {
+        state.cart = state.cart.filter((item) => item.id != action.payload.id);
       });
   },
 });
 
 export const selectCart = (state) => state.cart.cart;
 export const selectCartStatus = (state) => state.cart.status;
+export const selectCartLength = (state) => state.cart?.cart?.length;
 export const { resetCart } = cartSlice.actions;
 export default cartSlice.reducer;
