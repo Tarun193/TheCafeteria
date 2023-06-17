@@ -18,7 +18,7 @@ import AddProduct from "./Pages/AddProduct/AddProduct";
 import {
   selectProductsStatus,
   fetchProducts,
-} from "./Features/Products/productSlice";
+} from "./Features/Products/ProductSlice.jsx";
 import { selectBrandStatus, fetchBrands } from "./Features/Brand/BrandSlice";
 import {
   fetchCart,
@@ -32,6 +32,7 @@ import EditProduct from "./Pages/EditProduct/EditProduct";
 import { useEffect, useState } from "react";
 import Products from "./Pages/Products/Products";
 import CartPage from "./Pages/Cart/CartPage";
+import AddressPage from "./Pages/AddressPage.jsx/AddressPage";
 
 function App() {
   const dispatch = useDispatch();
@@ -85,6 +86,7 @@ function App() {
               </Route>
               <Route path="user" element={<PrivateUserRoutes />}>
                 <Route path="cart" element={<CartPage />} />
+                <Route path="checkout/address" element={<AddressPage />} />
               </Route>
             </Route>
           </Routes>

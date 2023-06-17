@@ -1,7 +1,5 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import { getAuthToken } from "../auth/authSlice";
 import API from "../../utils/API/api";
-import { startTransition } from "react";
 
 // Initial state of out Products.
 const initialState = {

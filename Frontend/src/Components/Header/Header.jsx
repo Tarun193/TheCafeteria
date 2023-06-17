@@ -27,9 +27,11 @@ const Header = () => {
             <Link to={"/products/"}>Products</Link>
             <Link to={"/user/cart/"} className="relative">
               Cart 🛒
-              <span className="w-[15px] h-[15px] grid place-content-center absolute rounded-full bg-red-500 top-[-4px] right-[-4px] text-sm">
-                {cartLength}
-              </span>
+              {!(loggedIN && cartLength) ? null : (
+                <span className="w-[15px] h-[15px] grid place-content-center absolute rounded-full bg-red-500 top-[-4px] right-[-4px] text-sm">
+                  {cartLength}
+                </span>
+              )}
             </Link>
             <li>
               {loggedIN ? (
