@@ -52,3 +52,22 @@ class CartItem(models.Model):
 
     def __str__(self):
         return self.user.first_name + " " + self.product.title + " Item"
+
+
+class Address(models.Model):
+    email = models.EmailField(blank=False, null=False)
+    mobile = models.CharField(max_length=20, blank=False, null=False)
+    first_name = models.CharField(max_length=64, blank=False, null=False)
+    last_name = models.CharField(max_length=64, blank=False, null=False)
+    Street = models.CharField(max_length=64, blank=False, null=False)
+    city = models.CharField(max_length=64, blank=False, null=False)
+    country = models.CharField(max_length=64, blank=False, null=False)
+    postal = models.CharField(max_length=64, blank=False, null=False)
+    province = models.CharField(max_length=64, blank=False, null=False)
+    user = models.ForeignKey(
+        CustomUser, on_delete=models.CASCADE, blank=False, null=False
+    )
+    selected = models.BooleanField(default=False, blank=True, null=True)
+
+    def __str__(self):
+        return self.user.first_name + " Address"

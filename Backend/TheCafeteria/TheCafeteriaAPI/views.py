@@ -4,12 +4,13 @@ from .Serializer import (
     CustomUserSerilizer,
     BrandSerializer,
     CartItemSerializer,
+    AddressSerializer,
 )
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated, IsAdminUser
-from rest_framework.status import HTTP_204_NO_CONTENT
+from rest_framework.status import HTTP_204_NO_CONTENT, HTTP_500_INTERNAL_SERVER_ERROR
 
 from .models import Product, CustomUser, ProductImages, Brand, CartItem
 
@@ -128,3 +129,18 @@ def getCartItems(request, pk=None, cart_id=None):
         cartItem = CartItem.objects.get(pk=cart_id)
         cartItem.delete()
         return Response({"id": cart_id})
+
+
+@api_view(["POST"])
+@permission_classes([IsAuthenticated])
+def address(request, pk=None):
+    if request.method == "POST":
+        try:
+            address = AddressSerializer(data=request.data)
+            if address.is_valid():
+                address.save()
+                return Response(address.data, status=200)
+            else:
+                return Response({"message": address.errors})
+        except Exception as e:
+            return Response({}, status=HTTP_500_INTERNAL_SERVER_ERROR)

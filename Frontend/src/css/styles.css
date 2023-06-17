@@ -856,10 +856,6 @@ video {
   width: 100%;
 }
 
-.min-w-\[30\%\] {
-  min-width: 30%;
-}
-
 .min-w-\[70\%\] {
   min-width: 70%;
 }
@@ -1472,16 +1468,16 @@ video {
     width: 80%;
   }
 
+  .sm\:min-w-\[30\%\] {
+    min-width: 30%;
+  }
+
   .sm\:min-w-\[43\%\] {
     min-width: 43%;
   }
 
   .sm\:min-w-\[45\%\] {
     min-width: 45%;
-  }
-
-  .sm\:min-w-\[30\%\] {
-    min-width: 30%;
   }
 
   .sm\:max-w-\[43\%\] {

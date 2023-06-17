@@ -1,10 +1,46 @@
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { selectCart } from "../../Features/cartSlice/cartSlice";
 import { useEffect, useState } from "react";
+import { getAuthToken, getuserInfo } from "../../Features/auth/authSlice";
+import { addAddress } from "../../Features/addressSlice/addressSlice";
+
 const AddressPage = () => {
+  const [email, setEmail] = useState("");
+  const [mobile, setMobile] = useState("");
+  const [firstName, setFirstName] = useState("");
+  const [lastName, setLastName] = useState("");
+  const [street, setStreet] = useState("");
+  const [city, setCity] = useState("");
+  const [country, setCountry] = useState("");
+  const [postal, setPostal] = useState("");
+  const [province, setProvince] = useState("");
+
+  const user_id = useSelector(getuserInfo)?.user_id;
+  const access = useSelector(getAuthToken)?.access;
+  const dispatch = useDispatch();
   const [subTotal, setSubTotal] = useState(0);
   const [tax, setTax] = useState(0);
 
+  const handleAddAddress = () => {
+    const data = {
+      email,
+      mobile,
+      first_name: firstName,
+      last_name: lastName,
+      Street: street,
+      city,
+      country,
+      postal,
+      province,
+      user_id,
+    };
+    try {
+      const Data = { access, data };
+      dispatch(addAddress(Data)).unwrap();
+    } catch (e) {
+      console.log(e);
+    }
+  };
   const cart = useSelector(selectCart);
   useEffect(() => {
     if (cart) {
@@ -38,6 +74,8 @@ const AddressPage = () => {
                 id="email"
                 className="border border-black block p-1 w-full"
                 autoComplete="off"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
               />
             </p>
             <p className="space-y-2 flex-1 min-w-[70%] sm:min-w-[45%]">
@@ -48,6 +86,10 @@ const AddressPage = () => {
                 type="tel"
                 id="Mobile"
                 className="border border-black block p-1 w-full"
+                placeholder="+155555555555"
+                pattern="^\+[1-9]{1}[0-9]{3,14}$"
+                value={mobile}
+                onChange={(e) => setMobile(e.target.value)}
               />
             </p>
           </div>
@@ -60,6 +102,8 @@ const AddressPage = () => {
                 type="text"
                 id="firstName"
                 className="border border-black block p-1 w-full"
+                value={firstName}
+                onChange={(e) => setFirstName(e.target.value)}
               />
             </p>
             <p className="space-y-2 flex-1 min-w-[70%] sm:min-w-[45%]">
@@ -70,6 +114,8 @@ const AddressPage = () => {
                 type="text"
                 id="lastName"
                 className="border border-black block p-1 w-full"
+                value={lastName}
+                onChange={(e) => setLastName(e.target.value)}
               />
             </p>
           </div>
@@ -82,6 +128,8 @@ const AddressPage = () => {
                 type="text"
                 id="streetAddress"
                 className="border border-black block p-1 w-full"
+                value={street}
+                onChange={(e) => setStreet(e.target.value)}
               />
             </p>
 
@@ -93,6 +141,8 @@ const AddressPage = () => {
                 type="text"
                 id="city"
                 className="border border-black block p-1 w-full"
+                value={city}
+                onChange={(e) => setCity(e.target.value)}
               />
             </p>
           </div>
@@ -105,6 +155,8 @@ const AddressPage = () => {
                 type="text"
                 id="Country"
                 className="border border-black block p-1 w-full"
+                value={country}
+                onChange={(e) => setCountry(e.target.value)}
               />
             </p>
 
@@ -116,6 +168,8 @@ const AddressPage = () => {
                 type="text"
                 id="Postal"
                 className="border border-black block p-1 w-full"
+                value={postal}
+                onChange={(e) => setPostal(e.target.value)}
               />
             </p>
             <p className="space-y-2 flex-1 min-w-[70%] sm:min-w-[30%]">
@@ -126,12 +180,15 @@ const AddressPage = () => {
                 type="text"
                 id="Province"
                 className="border border-black block p-1 w-full"
+                value={province}
+                onChange={(e) => setProvince(e.target.value)}
               />
             </p>
           </div>
           <button
             type="button"
             className="my-2 p-2 border border-black rounded-md hover:bg-black hover:text-white text-lg"
+            onClick={handleAddAddress}
           >
             Add Address
           </button>

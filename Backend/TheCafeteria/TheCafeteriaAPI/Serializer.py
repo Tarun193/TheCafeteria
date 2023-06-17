@@ -1,6 +1,6 @@
 from rest_framework import serializers
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
-from .models import Product, ProductImages, CustomUser, Brand, CartItem
+from .models import Product, ProductImages, CustomUser, Brand, CartItem, Address
 
 
 class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
@@ -131,3 +131,28 @@ class CartItemSerializer(serializers.ModelSerializer):
         instance.quantity = validated_data.get("quantity", instance.quantity)
         instance.save()
         return instance
+
+
+class AddressSerializer(serializers.ModelSerializer):
+    user_id = serializers.PrimaryKeyRelatedField(
+        source="user",
+        queryset=CustomUser.objects.all(),
+        write_only=True,
+        required=False,
+    )
+
+    class Meta:
+        model = Address
+        fields = (
+            "email",
+            "mobile",
+            "first_name",
+            "last_name",
+            "Street",
+            "country",
+            "city",
+            "postal",
+            "province",
+            "user_id",
+            "selected",
+        )
