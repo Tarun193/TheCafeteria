@@ -85,3 +85,4 @@ class Order(models.Model):
     address = models.ForeignKey(
         Address, blank=False, null=True, on_delete=models.CASCADE
     )
+    status = models.CharField(max_length=20, blank=True, null=True, default="Confirmed")

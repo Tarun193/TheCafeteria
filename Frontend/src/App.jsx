@@ -39,12 +39,20 @@ import {
   selectAddressStatus,
 } from "./Features/addressSlice/addressSlice";
 
+import Loading from "react-fullscreen-loading";
+import MyOrders from "./Pages/MyOrders/MyOrders";
+import {
+  fetchOrders,
+  selectOrdersStatus,
+} from "./Features/orderSlice/orderSlice";
+
 function App() {
   const dispatch = useDispatch();
   const productStatus = useSelector(selectProductsStatus);
   const brandStatus = useSelector(selectBrandStatus);
   const cartStatus = useSelector(selectCartStatus);
   const addressStatus = useSelector(selectAddressStatus);
+  const orderStatus = useSelector(selectOrdersStatus);
   const [loading, setLoading] = useState(true);
   const userInfo = useSelector(getuserInfo);
   const loggedIn = useSelector(isLoggedIn);
@@ -61,13 +69,16 @@ function App() {
       if (brandStatus === "idle") {
         dispatch(fetchBrands());
       }
-      setTimeout(() => setLoading(false), 500);
+      setTimeout(() => setLoading(false), 1000);
     }
     if (cartStatus === "idle" && loggedIn) {
       dispatch(fetchCart({ id: userInfo?.user_id, access: access }));
     }
     if (addressStatus === "idle" && loggedIn) {
       dispatch(fetchAddresses({ access, id: userInfo?.user_id }));
+    }
+    if (orderStatus === "idle" && loggedIn) {
+      dispatch(fetchOrders({ access, id: userInfo?.user_id }));
     }
     if (!loggedIn) {
       dispatch(resetCart());
@@ -76,7 +87,11 @@ function App() {
   return (
     <>
       {loading ? (
-        <h1>Loading</h1>
+        <Loading
+          loading={loading}
+          background="rgb(255,237,213)"
+          loaderColor="#3498db"
+        />
       ) : (
         <Router>
           <Routes>
@@ -96,7 +111,10 @@ function App() {
                 <Route path="cart" element={<CartPage />} />
                 <Route path="checkout" element={<AddressPage />} />
                 <Route path="orderPlaced" element={<OrderPlaced />} />
+                <Route path="orders" element={<MyOrders />} />
               </Route>
+              {/* In future add 404 Page not found Page. */}
+              <Route path="*" element={<Home />} />
             </Route>
           </Routes>
         </Router>

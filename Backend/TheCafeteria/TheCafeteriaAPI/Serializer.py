@@ -182,6 +182,8 @@ class orderSerializer(serializers.ModelSerializer):
     class Meta:
         model = Order
         fields = (
+            "id",
+            "status",
             "product_id",
             "product",
             "quantity",
@@ -192,7 +194,7 @@ class orderSerializer(serializers.ModelSerializer):
         )
 
     def get_product(self, obj):
-        return ProductSerializer(obj.address).data
+        return ProductSerializer(obj.product).data
 
     def get_address(self, obj):
         return AddressSerializer(obj.address).data

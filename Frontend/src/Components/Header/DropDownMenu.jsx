@@ -49,6 +49,12 @@ const DropDownMenu = () => {
             <a className="block px-4 py-2 text-sm text-gray-500 rounded-lg hover:bg-gray-50 hover:text-gray-700">
               Account
             </a>
+            <Link
+              to={"/user/orders"}
+              className="block px-4 py-2 text-sm text-gray-500 rounded-lg hover:bg-gray-50 hover:text-gray-700 hover:cursor-pointer"
+            >
+              My Orders
+            </Link>
             {isAdmin ? (
               <>
                 <Link

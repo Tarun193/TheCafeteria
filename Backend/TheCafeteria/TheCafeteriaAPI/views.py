@@ -200,6 +200,14 @@ def create_checkout_session(request):
     return Response({"message": "Success", "url": checkout_session.url})
 
 
+@api_view(["GET"])
+# @permission_classes([IsAuthenticated])
+def Orders(request, pk):
+    orders = Order.objects.filter(user__id=pk)
+    data = orderSerializer(orders, many=True).data
+    return Response(data)
+
+
 @api_view(["POST"])
 @csrf_exempt
 def stripeWebHook(request):

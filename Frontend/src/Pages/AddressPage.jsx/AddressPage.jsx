@@ -141,7 +141,10 @@ const AddressPage = () => {
           </section>
           <button
             onClick={() => handlePayNow()}
-            className="mt-4 mb-2 p-2 border border-black rounded-md hover:bg-black hover:text-white"
+            className={`mt-4 mb-2 p-2 border border-black rounded-md hover:bg-black hover:text-white hover: ${
+              !addresses?.length ? "opacity-50 hover:cursor-not-allowed" : null
+            }`}
+            disabled={!addresses?.length}
           >
             Pay Now
           </button>
