@@ -195,6 +195,7 @@ const Products = () => {
   };
 
   useEffect(() => {
+    window.scrollTo(0, 0);
     let sortedProducts;
     if (selectedBrands.length) {
       sortedProducts = products.filter((product) => {

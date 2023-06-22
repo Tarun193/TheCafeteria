@@ -36,6 +36,10 @@ const ProductPage = () => {
       navigate("/Login/");
     }
   };
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
+
   return (
     <section className="w-full my-10 flex justify-center items-center">
       <section className="w-[90%] md:w-[80%] lg:w-[70%] mx-auto bg-white p-2 rounded-xl flex flex-col items-start md:flex-row py-4 relative">

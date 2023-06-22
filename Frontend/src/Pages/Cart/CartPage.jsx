@@ -8,6 +8,7 @@ import {
   updateCartProductQuantity,
 } from "../../Features/cartSlice/cartSlice";
 import { getAuthToken, getuserInfo } from "../../Features/auth/authSlice";
+import { useNavigate } from "react-router-dom";
 
 const CartPage = () => {
   const cart = useSelector(selectCart);
@@ -18,7 +19,9 @@ const CartPage = () => {
   const dispatch = useDispatch();
   const access = useSelector(getAuthToken)?.access;
   const userId = useSelector(getuserInfo)?.user_id;
+  const navigate = useNavigate();
   useEffect(() => {
+    window.scrollTo(0, 0);
     if (cart) {
       calculatePriceNTax();
     }
@@ -140,7 +143,10 @@ const CartPage = () => {
                     </p>
                   </div>
                 </section>
-                <button className="m-2 p-2 border border-black rounded-md hover:bg-black hover:text-white">
+                <button
+                  onClick={() => navigate("/user/checkout/")}
+                  className="m-2 p-2 border border-black rounded-md hover:bg-black hover:text-white"
+                >
                   Checkout
                 </button>
               </>

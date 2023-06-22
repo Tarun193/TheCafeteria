@@ -5,14 +5,17 @@ from .Serializer import (
     BrandSerializer,
     CartItemSerializer,
     AddressSerializer,
+    orderSerializer,
 )
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated, IsAdminUser
 from rest_framework.status import HTTP_204_NO_CONTENT, HTTP_500_INTERNAL_SERVER_ERROR
-
-from .models import Product, CustomUser, ProductImages, Brand, CartItem
+from django.views.decorators.csrf import csrf_exempt
+from .models import Product, CustomUser, ProductImages, Brand, CartItem, Address, Order
+import json
+import stripe
 
 
 @api_view(["GET", "POST"])
@@ -75,7 +78,6 @@ def SignUp(request):
     try:
         user = CustomUserSerilizer(data=request.data)
         if user.is_valid():
-            print(user)
             user.save()
             return Response({"message": "success"}, status=200)
         else:
@@ -100,7 +102,7 @@ def Image(request, id=None):
 @permission_classes([IsAuthenticated])
 def getCartItems(request, pk=None, cart_id=None):
     if request.method == "GET":
-        cartItems = CartItem.objects.filter(user=pk)
+        cartItems = CartItem.objects.filter(user__id=pk)
         cartItemsData = CartItemSerializer(cartItems, many=True).data
         return Response(cartItemsData)
 
@@ -131,10 +133,15 @@ def getCartItems(request, pk=None, cart_id=None):
         return Response({"id": cart_id})
 
 
-@api_view(["POST"])
+@api_view(["POST", "GET", "PUT"])
 @permission_classes([IsAuthenticated])
 def address(request, pk=None):
-    if request.method == "POST":
+    if request.method == "GET":
+        address = Address.objects.filter(user__id=pk)
+        data = AddressSerializer(address, many=True).data
+        return Response(data)
+
+    elif request.method == "POST":
         try:
             address = AddressSerializer(data=request.data)
             if address.is_valid():
@@ -144,3 +151,91 @@ def address(request, pk=None):
                 return Response({"message": address.errors})
         except Exception as e:
             return Response({}, status=HTTP_500_INTERNAL_SERVER_ERROR)
+
+    elif request.method == "PUT":
+        user = request.data.get("user_id")
+        id = request.data.get("id")
+        address = Address.objects.filter(user__id=user)
+        for a in address:
+            if a.id == id:
+                a.selected = True
+            else:
+                a.selected = False
+            a.save()
+        return Response(AddressSerializer(address, many=True).data)
+
+
+@api_view(["POST"])
+@permission_classes({IsAuthenticated})
+def create_checkout_session(request):
+    user = request.data.get("user_id")
+    products = CartItem.objects.filter(user=user)
+    listItems = []
+    for product in products:
+        temp = {
+            "price_data": {
+                "currency": "usd",
+                "unit_amount": int(float(product.product.price) * 100),
+                "product_data": {
+                    "name": product.product.title,
+                },
+            },
+            "quantity": product.quantity,
+        }
+        listItems.append(temp)
+    checkout_session = ""
+
+    try:
+        checkout_session = stripe.checkout.Session.create(
+            client_reference_id=user,
+            line_items=listItems,
+            mode="payment",
+            success_url="http://localhost:5173/user/orderPlaced",
+            cancel_url="http://localhost:5173/",
+        )
+    except Exception as e:
+        print(str(e))
+        Response({"message": "Failed"}, status=500)
+
+    return Response({"message": "Success", "url": checkout_session.url})
+
+
+@api_view(["POST"])
+@csrf_exempt
+def stripeWebHook(request):
+    payload = request.body
+    event = None
+
+    try:
+        event = stripe.Event.construct_from(json.loads(payload), stripe.api_key)
+    except ValueError as e:
+        # Invalid payload
+        return Response(status=400)
+
+    # Handle the event
+    if event["type"] == "checkout.session.completed":
+        session = event["data"]["object"]
+        user_id = session["client_reference_id"]
+        addresses = Address.objects.filter(user__id=user_id)
+        address_id = None
+        for address in addresses:
+            if address.selected:
+                address_id = address.id
+                break
+        cartItems = CartItem.objects.filter(user__id=user_id)
+        for item in cartItems:
+            data = {
+                "address_id": address_id,
+                "user_id": user_id,
+                "quantity": item.quantity,
+                "product_id": item.product.id,
+            }
+            order = orderSerializer(data=data)
+            if order.is_valid():
+                order.save()
+                item.delete()
+
+    else:
+        print("Unhandled event type {}".format(event["type"]))
+
+    return Response({"success": True})

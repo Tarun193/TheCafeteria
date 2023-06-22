@@ -33,20 +33,26 @@ import { useEffect, useState } from "react";
 import Products from "./Pages/Products/Products";
 import CartPage from "./Pages/Cart/CartPage";
 import AddressPage from "./Pages/AddressPage.jsx/AddressPage";
+import OrderPlaced from "./Pages/OrderPlaced";
+import {
+  fetchAddresses,
+  selectAddressStatus,
+} from "./Features/addressSlice/addressSlice";
 
 function App() {
   const dispatch = useDispatch();
   const productStatus = useSelector(selectProductsStatus);
   const brandStatus = useSelector(selectBrandStatus);
   const cartStatus = useSelector(selectCartStatus);
+  const addressStatus = useSelector(selectAddressStatus);
   const [loading, setLoading] = useState(true);
   const userInfo = useSelector(getuserInfo);
   const loggedIn = useSelector(isLoggedIn);
   const access = useSelector(getAuthToken)?.access;
   useEffect(() => {
-    if (loading) {
+    if (loading && !loggedIn) {
       const refresh = localStorage.getItem("refresh");
-      if (refresh && !loggedIn) {
+      if (refresh) {
         dispatch(refreshToken());
       }
       if (productStatus === "idle") {
@@ -58,8 +64,10 @@ function App() {
       setTimeout(() => setLoading(false), 500);
     }
     if (cartStatus === "idle" && loggedIn) {
-      console.log("test");
       dispatch(fetchCart({ id: userInfo?.user_id, access: access }));
+    }
+    if (addressStatus === "idle" && loggedIn) {
+      dispatch(fetchAddresses({ access, id: userInfo?.user_id }));
     }
     if (!loggedIn) {
       dispatch(resetCart());
@@ -86,7 +94,8 @@ function App() {
               </Route>
               <Route path="user" element={<PrivateUserRoutes />}>
                 <Route path="cart" element={<CartPage />} />
-                <Route path="checkout/address" element={<AddressPage />} />
+                <Route path="checkout" element={<AddressPage />} />
+                <Route path="orderPlaced" element={<OrderPlaced />} />
               </Route>
             </Route>
           </Routes>

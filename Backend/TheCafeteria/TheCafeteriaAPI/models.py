@@ -71,3 +71,17 @@ class Address(models.Model):
 
     def __str__(self):
         return self.user.first_name + " Address"
+
+
+class Order(models.Model):
+    product = models.ForeignKey(Product, on_delete=models.CASCADE, name="product")
+    quantity = models.IntegerField(default=0)
+    user = models.ForeignKey(
+        CustomUser,
+        on_delete=models.CASCADE,
+        blank=True,
+        null=True,
+    )
+    address = models.ForeignKey(
+        Address, blank=False, null=True, on_delete=models.CASCADE
+    )

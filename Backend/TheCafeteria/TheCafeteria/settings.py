@@ -13,6 +13,8 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 from pathlib import Path
 import os
 from datetime import timedelta
+from dotenv import load_dotenv
+import stripe
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -196,3 +198,14 @@ SIMPLE_JWT = {
     "TOKEN_OBTAIN_SERIALIZER": "TheCafeteriaAPI.Serializer.MyTokenObtainPairSerializer",
     # ...
 }
+
+
+load_dotenv(BASE_DIR.joinpath(".env"))
+
+stripe.api_key = STRIPE_SECRET_KEY = os.getenv("stripe_key")
+
+
+ALLOWED_HOSTS = [
+    "e91b-2607-fea8-639f-4d00-3147-cf7e-f535-2f8a.ngrok-free.app",
+    "127.0.0.1",
+]

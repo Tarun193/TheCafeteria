@@ -1,6 +1,6 @@
 from rest_framework import serializers
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
-from .models import Product, ProductImages, CustomUser, Brand, CartItem, Address
+from .models import Product, ProductImages, CustomUser, Brand, CartItem, Address, Order
 
 
 class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
@@ -145,6 +145,7 @@ class AddressSerializer(serializers.ModelSerializer):
         model = Address
         fields = (
             "email",
+            "id",
             "mobile",
             "first_name",
             "last_name",
@@ -156,3 +157,42 @@ class AddressSerializer(serializers.ModelSerializer):
             "user_id",
             "selected",
         )
+
+
+class orderSerializer(serializers.ModelSerializer):
+    product_id = serializers.PrimaryKeyRelatedField(
+        source="product",
+        queryset=Product.objects.all(),
+        write_only=True,
+        required=False,
+    )
+    user_id = serializers.PrimaryKeyRelatedField(
+        source="user",
+        queryset=CustomUser.objects.all(),
+        write_only=True,
+        required=False,
+    )
+    address_id = serializers.PrimaryKeyRelatedField(
+        source="address", queryset=Address.objects.all(), write_only=True
+    )
+    product = serializers.SerializerMethodField()
+
+    address = serializers.SerializerMethodField()
+
+    class Meta:
+        model = Order
+        fields = (
+            "product_id",
+            "product",
+            "quantity",
+            "user_id",
+            "id",
+            "address",
+            "address_id",
+        )
+
+    def get_product(self, obj):
+        return ProductSerializer(obj.address).data
+
+    def get_address(self, obj):
+        return AddressSerializer(obj.address).data
