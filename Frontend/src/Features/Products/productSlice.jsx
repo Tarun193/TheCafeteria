@@ -91,6 +91,24 @@ export const deleteProductImage = createAsyncThunk(
     }
   }
 );
+
+export const addreview = createAsyncThunk(
+  "product/addReview",
+  async (Data, thunkAPI) => {
+    try {
+      const { access, data } = Data;
+      const response = await API.post(`product/addreview/`, data, {
+        headers: {
+          Authorization: "Bearer " + access,
+        },
+      });
+      console.log(response.data);
+      return response.data;
+    } catch (e) {
+      thunkAPI.rejectWithValue(e.response.data);
+    }
+  }
+);
 const productSlice = createSlice({
   name: "products",
   initialState,
@@ -123,6 +141,12 @@ const productSlice = createSlice({
           (product) => product.id != action.payload
         );
         state.products = products;
+      })
+      .addCase(addreview.fulfilled(), (state, action) => {
+        const product_id = action.payload.p_id;
+        const product = state.products.find((pro) => pro.id == product_id);
+        console.log(product.reviews);
+        product.reviews.push(action.payload);
       });
   },
 });

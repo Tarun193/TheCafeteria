@@ -84,6 +84,7 @@ function App() {
       dispatch(resetCart());
     }
   }, [loading, loggedIn]);
+
   return (
     <>
       {loading ? (

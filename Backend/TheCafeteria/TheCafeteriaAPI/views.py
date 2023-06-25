@@ -6,6 +6,7 @@ from .Serializer import (
     CartItemSerializer,
     AddressSerializer,
     orderSerializer,
+    ReviewSerializer,
 )
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
@@ -13,7 +14,16 @@ from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated, IsAdminUser
 from rest_framework.status import HTTP_204_NO_CONTENT, HTTP_500_INTERNAL_SERVER_ERROR
 from django.views.decorators.csrf import csrf_exempt
-from .models import Product, CustomUser, ProductImages, Brand, CartItem, Address, Order
+from .models import (
+    Product,
+    CustomUser,
+    ProductImages,
+    Brand,
+    CartItem,
+    Address,
+    Order,
+    Review,
+)
 import json
 import stripe
 
@@ -247,3 +257,20 @@ def stripeWebHook(request):
         print("Unhandled event type {}".format(event["type"]))
 
     return Response({"success": True})
+
+
+@api_view(["POST"])
+def reviews(request):
+    if request.method == "POST":
+        print("request.data:", request.data)
+        review = ReviewSerializer(data=request.data)
+        if review.is_valid():
+            print("review.valid_data:", review.validated_data)
+            review.save()
+            return Response(review.data, status=200)
+        else:
+            print("review.errors:", review.errors)
+            return Response(HTTP_204_NO_CONTENT)
+
+    else:
+        return Response(HTTP_204_NO_CONTENT)

@@ -34,6 +34,7 @@ export const fetchAddresses = createAsyncThunk(
           Authorization: "Bearer " + access,
         },
       });
+      console.log(response.data);
       return response.data;
     } catch (e) {
       thunkAPI.rejectWithValue(e.response.data);

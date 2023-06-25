@@ -86,3 +86,19 @@ class Order(models.Model):
         Address, blank=False, null=True, on_delete=models.CASCADE
     )
     status = models.CharField(max_length=20, blank=True, null=True, default="Confirmed")
+
+
+class Review(models.Model):
+    product = models.ForeignKey(
+        Product,
+        on_delete=models.CASCADE,
+        blank=False,
+        null=False,
+        related_name="reviews",
+    )
+    stars = models.IntegerField(blank=False, null=False)
+    review = models.TextField(blank=False, null=False)
+
+    user = models.ForeignKey(
+        CustomUser, blank=False, null=False, on_delete=models.CASCADE
+    )

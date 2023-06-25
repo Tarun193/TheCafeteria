@@ -1,6 +1,15 @@
 from rest_framework import serializers
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
-from .models import Product, ProductImages, CustomUser, Brand, CartItem, Address, Order
+from .models import (
+    Product,
+    ProductImages,
+    CustomUser,
+    Brand,
+    CartItem,
+    Address,
+    Order,
+    Review,
+)
 
 
 class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
@@ -40,6 +49,7 @@ class ProductSerializer(serializers.ModelSerializer):
         source="Brand", queryset=Brand.objects.all(), write_only=True
     )
 
+    reviews = serializers.SerializerMethodField()
     Brand = serializers.SerializerMethodField()
 
     class Meta:
@@ -56,6 +66,7 @@ class ProductSerializer(serializers.ModelSerializer):
             "Brand",
             "brand_id",
             "images_data",
+            "reviews",
         )
 
     # This method will return serialized image data to the images field.
@@ -65,6 +76,9 @@ class ProductSerializer(serializers.ModelSerializer):
     # This method will return serilized data for brand which is related to product
     def get_Brand(self, obj):
         return BrandSerializer(obj.Brand).data
+
+    def get_reviews(self, obj):
+        return ReviewSerializer(obj.reviews.all(), many=True).data
 
     def create(self, validated_data):
         images_data = validated_data.pop("images")
@@ -198,3 +212,25 @@ class orderSerializer(serializers.ModelSerializer):
 
     def get_address(self, obj):
         return AddressSerializer(obj.address).data
+
+
+class ReviewSerializer(serializers.ModelSerializer):
+    product_id = serializers.PrimaryKeyRelatedField(
+        source="product", queryset=Product.objects.all(), write_only=True
+    )
+    user_id = serializers.PrimaryKeyRelatedField(
+        source="user", queryset=CustomUser.objects.all(), write_only=True
+    )
+    user_name = serializers.SerializerMethodField()
+
+    p_id = serializers.SerializerMethodField()
+
+    class Meta:
+        model = Review
+        fields = ("id", "user_name", "stars", "review", "product_id", "user_id", "p_id")
+
+    def get_user_name(self, review):
+        return f"{review.user.first_name} {review.user.last_name}"
+
+    def get_p_id(self, review):
+        return review.product.id

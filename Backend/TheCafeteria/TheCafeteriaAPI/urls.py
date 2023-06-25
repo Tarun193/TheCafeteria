@@ -11,6 +11,7 @@ from .views import (
     create_checkout_session,
     stripeWebHook,
     Orders,
+    reviews,
 )
 from django.urls import path
 from rest_framework_simplejwt.views import (
@@ -29,6 +30,7 @@ urlpatterns = [
     path("user/address/", view=address),
     path("user/address/<int:pk>", view=address),
     path("user/orders/<int:pk>", view=Orders),
+    path("product/addreview/", view=reviews),
     path("token/", view=TokenObtainPairView.as_view(), name="token_obtain_pair"),
     path("token/refresh/", TokenRefreshView.as_view(), name="token_refresh"),
     path("create-checkout-session/", view=create_checkout_session),
