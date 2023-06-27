@@ -59,8 +59,10 @@ const EditProduct = () => {
       data.append("description", description);
       data.append("brand_id", brand);
       dispatch(updateProducts({ data, id, access })).unwrap();
+      data.forEach((d) => console.log(d));
       navigate("/");
     } catch (e) {
+      console.log(e);
     } finally {
       setRequestStatus("idle");
     }

@@ -57,6 +57,7 @@ function App() {
   const userInfo = useSelector(getuserInfo);
   const loggedIn = useSelector(isLoggedIn);
   const access = useSelector(getAuthToken)?.access;
+  console.log(access);
   useEffect(() => {
     if (loading && !loggedIn) {
       const refresh = localStorage.getItem("refresh");

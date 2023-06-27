@@ -3,181 +3,9 @@ import ProductCard from "../../Components/TopProducts/ProductCard";
 import { selectAllBrands } from "../../Features/Brand/BrandSlice";
 import { useEffect, useState } from "react";
 import FilterMenu from "./FilterMenu";
+import { selectAllProducts } from "../../Features/Products/ProductSlice";
 const Products = () => {
-  const products = [
-    {
-      id: 1,
-      title: "Chamomile tea - Natural",
-      subTitle: "Chamomile tea - Natural, Pack of 20",
-      price: "4.99",
-      description:
-        "Tim Hortons specialty teas offer the discerning tea drinker the chance to experience a variety of high quality specialty teas. Discover and enjoy our wide selection of extraordinary teas. Our soothing, revitalizing and delicious herbal teas are made from various selections of the finest herbs, flowers and spices. Tim Hortons chamomile herbal tea is an aromati",
-      stock: 10,
-      likes: 0,
-      images: [
-        {
-          id: 7,
-          image: "/media/ProductImages/TH-Chamomile-20ct-Crt-Eng_kaF9Izy.jpg",
-        },
-      ],
-      Brand: {
-        id: 1,
-        name: "Tim Hortons",
-        logo: "/media/BrandImages/timsLogo.png",
-      },
-    },
-    {
-      id: 2,
-      title: "Starbucks Caffe Verona Dark Roast Ground Coffee",
-      subTitle:
-        "Starbucks Caffe Verona Dark Roast Ground Coffee K-Cups - 10 CT",
-      price: "18.99",
-      description:
-        "Muted with oil, the tumbling beans become eerily silent. A master roaster watches, knowing that if he pushes them a second too long, they'll burst into flame. White smoke hangs down as the glistening beans turn ebony. This is French roast, and you can't roast it darker. Straightforward, light-bodied with low acidity, and immensely popular since 1971, our darkest roast is adored for its intense smokiness. Designed for use with the Keurig Single Cup Brewing System to provide a premium brewed coffee experience in less than a minute—without the mess.",
-      stock: 20,
-      likes: 0,
-      images: [
-        {
-          id: 18,
-          image: "/media/ProductImages/star_1_cBPAcg0.jpg",
-        },
-      ],
-      Brand: {
-        id: 2,
-        name: "Starbucks",
-        logo: "/media/BrandImages/starbucks.png",
-      },
-    },
-    {
-      id: 3,
-      title: "Chamomile tea - Natural",
-      subTitle: "Chamomile tea - Natural, Pack of 20",
-      price: "4.99",
-      description:
-        "Tim Hortons specialty teas offer the discerning tea drinker the chance to experience a variety of high quality specialty teas. Discover and enjoy our wide selection of extraordinary teas. Our soothing, revitalizing and delicious herbal teas are made from various selections of the finest herbs, flowers and spices. Tim Hortons chamomile herbal tea is an aromati",
-      stock: 10,
-      likes: 0,
-      images: [
-        {
-          id: 7,
-          image: "/media/ProductImages/TH-Chamomile-20ct-Crt-Eng_kaF9Izy.jpg",
-        },
-      ],
-      Brand: {
-        id: 1,
-        name: "Tim Hortons",
-        logo: "/media/BrandImages/timsLogo.png",
-      },
-    },
-    {
-      id: 4,
-      title: "Starbucks Caffe Verona Dark Roast Ground Coffee",
-      subTitle:
-        "Starbucks Caffe Verona Dark Roast Ground Coffee K-Cups - 10 CT",
-      price: "18.99",
-      description:
-        "Muted with oil, the tumbling beans become eerily silent. A master roaster watches, knowing that if he pushes them a second too long, they'll burst into flame. White smoke hangs down as the glistening beans turn ebony. This is French roast, and you can't roast it darker. Straightforward, light-bodied with low acidity, and immensely popular since 1971, our darkest roast is adored for its intense smokiness. Designed for use with the Keurig Single Cup Brewing System to provide a premium brewed coffee experience in less than a minute—without the mess.",
-      stock: 20,
-      likes: 0,
-      images: [
-        {
-          id: 18,
-          image: "/media/ProductImages/star_1_cBPAcg0.jpg",
-        },
-      ],
-      Brand: {
-        id: 2,
-        name: "Starbucks",
-        logo: "/media/BrandImages/starbucks.png",
-      },
-    },
-    {
-      id: 5,
-      title: "Chamomile tea - Natural",
-      subTitle: "Chamomile tea - Natural, Pack of 20",
-      price: "4.99",
-      description:
-        "Tim Hortons specialty teas offer the discerning tea drinker the chance to experience a variety of high quality specialty teas. Discover and enjoy our wide selection of extraordinary teas. Our soothing, revitalizing and delicious herbal teas are made from various selections of the finest herbs, flowers and spices. Tim Hortons chamomile herbal tea is an aromati",
-      stock: 10,
-      likes: 0,
-      images: [
-        {
-          id: 7,
-          image: "/media/ProductImages/TH-Chamomile-20ct-Crt-Eng_kaF9Izy.jpg",
-        },
-      ],
-      Brand: {
-        id: 1,
-        name: "Tim Hortons",
-        logo: "/media/BrandImages/timsLogo.png",
-      },
-    },
-    {
-      id: 6,
-      title: "Starbucks Caffe Verona Dark Roast Ground Coffee",
-      subTitle:
-        "Starbucks Caffe Verona Dark Roast Ground Coffee K-Cups - 10 CT",
-      price: "18.99",
-      description:
-        "Muted with oil, the tumbling beans become eerily silent. A master roaster watches, knowing that if he pushes them a second too long, they'll burst into flame. White smoke hangs down as the glistening beans turn ebony. This is French roast, and you can't roast it darker. Straightforward, light-bodied with low acidity, and immensely popular since 1971, our darkest roast is adored for its intense smokiness. Designed for use with the Keurig Single Cup Brewing System to provide a premium brewed coffee experience in less than a minute—without the mess.",
-      stock: 20,
-      likes: 0,
-      images: [
-        {
-          id: 18,
-          image: "/media/ProductImages/star_1_cBPAcg0.jpg",
-        },
-      ],
-      Brand: {
-        id: 2,
-        name: "Starbucks",
-        logo: "/media/BrandImages/starbucks.png",
-      },
-    },
-    {
-      id: 7,
-      title: "Chamomile tea - Natural",
-      subTitle: "Chamomile tea - Natural, Pack of 20",
-      price: "4.99",
-      description:
-        "Tim Hortons specialty teas offer the discerning tea drinker the chance to experience a variety of high quality specialty teas. Discover and enjoy our wide selection of extraordinary teas. Our soothing, revitalizing and delicious herbal teas are made from various selections of the finest herbs, flowers and spices. Tim Hortons chamomile herbal tea is an aromati",
-      stock: 10,
-      likes: 0,
-      images: [
-        {
-          id: 7,
-          image: "/media/ProductImages/TH-Chamomile-20ct-Crt-Eng_kaF9Izy.jpg",
-        },
-      ],
-      Brand: {
-        id: 1,
-        name: "Tim Hortons",
-        logo: "/media/BrandImages/timsLogo.png",
-      },
-    },
-    {
-      id: 8,
-      title: "Starbucks Caffe Verona Dark Roast Ground Coffee",
-      subTitle:
-        "Starbucks Caffe Verona Dark Roast Ground Coffee K-Cups - 10 CT",
-      price: "18.99",
-      description:
-        "Muted with oil, the tumbling beans become eerily silent. A master roaster watches, knowing that if he pushes them a second too long, they'll burst into flame. White smoke hangs down as the glistening beans turn ebony. This is French roast, and you can't roast it darker. Straightforward, light-bodied with low acidity, and immensely popular since 1971, our darkest roast is adored for its intense smokiness. Designed for use with the Keurig Single Cup Brewing System to provide a premium brewed coffee experience in less than a minute—without the mess.",
-      stock: 20,
-      likes: 0,
-      images: [
-        {
-          id: 18,
-          image: "/media/ProductImages/star_1_cBPAcg0.jpg",
-        },
-      ],
-      Brand: {
-        id: 2,
-        name: "Starbucks",
-        logo: "/media/BrandImages/starbucks.png",
-      },
-    },
-  ];
+  const products = useSelector(selectAllProducts);
   const [filteredProducts, setFilteredProducts] = useState([...products]);
   const [selectedBrands, setSelectedBrands] = useState([]);
   const Brands = useSelector(selectAllBrands);
@@ -196,23 +24,19 @@ const Products = () => {
 
   useEffect(() => {
     window.scrollTo(0, 0);
-    let sortedProducts;
+    let sortedProducts = [...products];
     if (selectedBrands.length) {
-      sortedProducts = products.filter((product) => {
-        return selectedBrands.includes(String(product.Brand.id));
-      });
+      sortedProducts = sortedProducts.filter((product) =>
+        selectedBrands.includes(String(product.Brand.id))
+      );
     } else {
-      sortedProducts = products;
+      sortedProducts = [...products];
     }
-    const filteredProducts =
+    sortedProducts =
       priceFilter === "LowToHigh"
-        ? sortedProducts.sort((p1, p2) =>
-            p1.price < p2.price ? 1 : p1.price > p2.price ? -1 : 0
-          )
-        : sortedProducts.sort((p1, p2) =>
-            p1.price > p2.price ? 1 : p1.price < p2.price ? -1 : 0
-          );
-    setFilteredProducts(filteredProducts);
+        ? sortedProducts.sort((p1, p2) => p1.price - p2.price)
+        : sortedProducts.sort((p1, p2) => p2.price - p1.price);
+    setFilteredProducts(sortedProducts);
   }, [selectedBrands, priceFilter]);
 
   const BrandFilter = Brands.map((Brand) => (

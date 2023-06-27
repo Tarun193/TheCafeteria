@@ -149,6 +149,7 @@ const SignUpPage = () => {
           >
             Sign Up
           </button>
+          <p className="text-red-400 text-sm font-semibold">{error}</p>
         </form>
       </section>
     </section>

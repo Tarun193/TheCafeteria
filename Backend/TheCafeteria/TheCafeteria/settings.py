@@ -16,6 +16,8 @@ from datetime import timedelta
 from dotenv import load_dotenv
 import stripe
 
+load_dotenv()
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -24,7 +26,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = "django-insecure-qpdzva^op4--!i$p@3hk85re-3p#tvl($(t9fvzm636(=b8po!"
+SECRET_KEY = os.environ.get("SECRET_KEY")
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -83,10 +85,22 @@ WSGI_APPLICATION = "TheCafeteria.wsgi.application"
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 
+# DATABASES = {
+#     "default": {
+#         "ENGINE": "django.db.backends.sqlite3",
+#         "NAME": BASE_DIR / "db.sqlite3",
+#     }
+# }
+
+
 DATABASES = {
     "default": {
-        "ENGINE": "django.db.backends.sqlite3",
-        "NAME": BASE_DIR / "db.sqlite3",
+        "ENGINE": "django.db.backends.postgresql_psycopg2",
+        "NAME": os.environ.get("DB_NAME"),
+        "USER": os.environ.get("DB_USER"),
+        "PASSWORD": os.environ.get("DB_PASSWORD"),
+        "HOST": os.environ.get("DB_HOST"),
+        "PORT": os.environ.get("DB_PORT"),
     }
 }
 
@@ -145,8 +159,6 @@ STATICFILES_DIRS = [
 ]
 
 # User Uploaded Images:
-MEDIA_ROOT = os.path.join(BASE_DIR, "static/media")
-MEDIA_URL = "/media/"
 
 AUTH_USER_MODEL = "TheCafeteriaAPI.CustomUser"
 
@@ -200,12 +212,23 @@ SIMPLE_JWT = {
 }
 
 
-load_dotenv(BASE_DIR.joinpath(".env"))
-
 stripe.api_key = STRIPE_SECRET_KEY = os.getenv("stripe_key")
 
 
 ALLOWED_HOSTS = [
-    "e91b-2607-fea8-639f-4d00-3147-cf7e-f535-2f8a.ngrok-free.app",
+    ".vercel.app",
     "127.0.0.1",
 ]
+
+
+# Azure blob storage
+DEFAULT_FILE_STORAGE = "storages.backends.azure_storage.AzureStorage"
+AZURE_ACCOUNT_NAME = os.environ.get("STORAGE_ACCOUNT")
+AZURE_ACCOUNT_KEY = os.environ.get("ACCESS_KEY")
+AZURE_CONTAINER = os.environ.get("AZURE_CONTAINER")
+
+MEDIA_URL = "https://%s.blob.core.windows.net/%s/" % (
+    AZURE_ACCOUNT_NAME,
+    AZURE_CONTAINER,
+)
+MEDIA_ROOT = "media"

@@ -45,7 +45,7 @@ def GetProducts(request, id=None):
                 return Response(ProductSerializer(product).data, status=200)
             else:
                 return Response({"message": "Invalid Form"}, status=400)
-        except Exception:
+        except Exception as e:
             return Response({"message": "server error"}, status=500)
 
 
@@ -84,7 +84,7 @@ def Brands(request):
 @api_view(["POST"])
 def SignUp(request):
     if CustomUser.objects.filter(email__iexact=request.data["email"]).exists():
-        return Response({"message": "Email alredy exists"}, status=400)
+        return Response({"message": "Email already exists"}, status=400)
     try:
         user = CustomUserSerilizer(data=request.data)
         if user.is_valid():

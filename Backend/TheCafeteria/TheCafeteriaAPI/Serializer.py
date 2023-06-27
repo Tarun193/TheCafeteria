@@ -81,14 +81,14 @@ class ProductSerializer(serializers.ModelSerializer):
         return ReviewSerializer(obj.reviews.all(), many=True).data
 
     def create(self, validated_data):
-        images_data = validated_data.pop("images")
+        images_data = validated_data.pop("images_data")
         product = Product.objects.create(**validated_data)
         for image_data in images_data:
             ProductImages.objects.create(product=product, image=image_data)
         return product
 
     def update(self, instance, validated_data):
-        images_data = validated_data.pop("images", [])
+        images_data = validated_data.pop("images_data", [])
         instance.title = validated_data.get("title", instance.title)
         instance.subTitle = validated_data.get("subTitle", instance.subTitle)
         instance.price = validated_data.get("price", instance.price)

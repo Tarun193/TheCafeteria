@@ -88,6 +88,7 @@ const LoginPage = () => {
           >
             Login
           </button>
+          <p className="text-red-400 text-sm font-semibold">{loginError}</p>
         </form>
       </section>
     </section>

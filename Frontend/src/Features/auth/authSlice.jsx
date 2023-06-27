@@ -108,6 +108,7 @@ export const authSlice = createSlice({
         state.userDetails = { name, user_id, admin };
         localStorage.setItem("refresh", action.payload.refresh);
         state.processing = false;
+        state.error = "";
       }
     })
       .addCase(userLogin.rejected(), (state, action) => {

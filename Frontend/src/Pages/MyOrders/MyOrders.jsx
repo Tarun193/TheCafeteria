@@ -14,7 +14,7 @@ const MyOrders = () => {
             You Didn't Placed Order Yet !!!
           </h2>
         ) : (
-          <div>
+          <div className="space-y-12">
             {orders.map((order) => (
               <article
                 key={order.id}
