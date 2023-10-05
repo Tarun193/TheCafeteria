@@ -12,7 +12,7 @@ const Hero = () => {
         </div>
         <div className="w-full sm:w-1/3 flex justify-center items-center mt-2">
           <img
-            src="./src/assets/images/coffee.png"
+            src="./assets/images/coffee.png"
             alt="Coffee Image"
             className="w-[70%]"
           />
