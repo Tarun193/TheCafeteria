@@ -4,6 +4,8 @@ import { selectAllBrands } from "../../Features/Brand/BrandSlice";
 import { useEffect, useState } from "react";
 import FilterMenu from "./FilterMenu";
 import { selectAllProducts } from "../../Features/Products/ProductSlice";
+import Fuse from "fuse.js";
+
 const Products = () => {
   const products = useSelector(selectAllProducts);
   const [filteredProducts, setFilteredProducts] = useState([...products]);
@@ -23,14 +25,22 @@ const Products = () => {
   };
 
   useEffect(() => {
+    const fuse = new Fuse(products, {
+      keys: ["title", "subTitle"],
+    });
+    const serachURLParams = new URLSearchParams(window.location.search);
+    const query = serachURLParams.get("q");
     window.scrollTo(0, 0);
     let sortedProducts = [...products];
+    if (query) {
+      console.log(query);
+      sortedProducts = fuse.search(query).map((result) => result.item);
+      // sortedProducts = sortedProducts.filter(products => product)
+    }
     if (selectedBrands.length) {
       sortedProducts = sortedProducts.filter((product) =>
         selectedBrands.includes(String(product.Brand.id))
       );
-    } else {
-      sortedProducts = [...products];
     }
     sortedProducts =
       priceFilter === "LowToHigh"

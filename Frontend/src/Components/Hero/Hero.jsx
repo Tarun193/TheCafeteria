@@ -1,3 +1,4 @@
+import coffeeImage from "../../assets/images//coffee.png";
 const Hero = () => {
   return (
     <>
@@ -11,11 +12,7 @@ const Hero = () => {
           </h1>
         </div>
         <div className="w-full sm:w-1/3 flex justify-center items-center mt-2">
-          <img
-            src="./assets/images/coffee.png"
-            alt="Coffee Image"
-            className="w-[70%]"
-          />
+          <img src={coffeeImage} alt="Coffee Image" className="w-[70%]" />
         </div>
       </section>
       <hr className="my-2 h-1 w-[80%] bg-yellow-950 mx-auto" />
