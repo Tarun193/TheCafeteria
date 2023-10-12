@@ -5,6 +5,7 @@ import { useEffect, useState } from "react";
 import FilterMenu from "./FilterMenu";
 import { selectAllProducts } from "../../Features/Products/ProductSlice";
 import Fuse from "fuse.js";
+import { selectSearch } from "../../Features/search";
 
 const Products = () => {
   const products = useSelector(selectAllProducts);
@@ -12,6 +13,12 @@ const Products = () => {
   const [selectedBrands, setSelectedBrands] = useState([]);
   const Brands = useSelector(selectAllBrands);
   const [priceFilter, setPriceFilter] = useState("LowToHigh");
+  const search = useSelector(selectSearch);
+  const [link, setLink] = useState(window.location.search);
+  useEffect(() => {
+    // Update link when location changes
+    setLink(window.location.search);
+  }, []);
   const handleCheckInput = (event) => {
     if (event.target.checked) {
       const newSelectedBrands = [...selectedBrands, event.target.value];
@@ -28,14 +35,20 @@ const Products = () => {
     const fuse = new Fuse(products, {
       keys: ["title", "subTitle"],
     });
-    const serachURLParams = new URLSearchParams(window.location.search);
+    const serachURLParams = new URLSearchParams(link);
     const query = serachURLParams.get("q");
     window.scrollTo(0, 0);
     let sortedProducts = [...products];
-    if (query) {
-      console.log(query);
-      sortedProducts = fuse.search(query).map((result) => result.item);
+    if (search) {
+      sortedProducts = fuse.search(search).map((result) => result.item);
       // sortedProducts = sortedProducts.filter(products => product)
+      const searchParams = new URLSearchParams(window.location.search);
+      searchParams.set("q", search);
+      const newRelativePathQuery =
+        window.location.pathname + "?" + searchParams.toString();
+      history.replaceState(null, "", newRelativePathQuery);
+    } else {
+      history.replaceState(null, "", window.location.pathname);
     }
     if (selectedBrands.length) {
       sortedProducts = sortedProducts.filter((product) =>
@@ -47,7 +60,7 @@ const Products = () => {
         ? sortedProducts.sort((p1, p2) => p1.price - p2.price)
         : sortedProducts.sort((p1, p2) => p2.price - p1.price);
     setFilteredProducts(sortedProducts);
-  }, [selectedBrands, priceFilter]);
+  }, [selectedBrands, priceFilter, search]);
 
   const BrandFilter = Brands.map((Brand) => (
     <div key={Brand.id} className="flex items-center">
